@@ -1,0 +1,10 @@
+---
+const { entry } = Astro.locals.starlightRoute;
+const section = ['getting-started/faq', 'reference/acceptable-use'].includes(entry.id) ? 'Help and policies' : ['guides/domains', 'guides/environment'].includes(entry.id) ? 'Configuration' : entry.id.startsWith('getting-started/') ? 'Getting started' : entry.id.startsWith('guides/') ? 'Build and deploy' : entry.id.startsWith('operations/') ? 'Operate your app' : entry.id.startsWith('reference/') ? 'Reference' : 'Documentation';
+const isHome = Astro.url.pathname === '/';
+---
+<div class:list={['page-intro', { 'overview-intro': isHome }]}>
+  <div class="page-eyebrow" data-pagefind-ignore><a href="/">Docs</a><span aria-hidden="true">/</span><span>{section}</span></div>
+  <h1 id="_top">{entry.data.title}</h1>
+  <p class="page-description">{entry.data.description}</p>
+</div>

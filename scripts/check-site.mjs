@@ -89,6 +89,31 @@ async function checkSite() {
       fail(route, `canonical must be exactly ${expected}; found ${JSON.stringify(canonical)}`);
     }
 
+    const brandMetadata = {
+      'application-name': 'Deplexo',
+      author: 'Deplexo',
+      'og:site_name': 'Deplexo',
+      'og:locale': 'en_US',
+      'og:title': title,
+      'og:description': description,
+      'og:url': expected,
+      'og:image': `${origin}/social.png`,
+      'og:image:width': '1200',
+      'og:image:height': '630',
+      'twitter:card': 'summary_large_image',
+      'twitter:site': '@deplexo',
+      'twitter:title': title,
+      'twitter:description': description,
+      'twitter:image': `${origin}/social.png`,
+    };
+    for (const [name, value] of Object.entries(brandMetadata)) {
+      const matches = metas.filter(tag => (tag.get('name') ?? tag.get('property')) === name);
+      if (matches.length !== 1 || matches[0].get('content') !== value) fail(route, `${name} must occur once with the correct brand or page value`);
+    }
+    const icons = tags(html, 'link');
+    if (!icons.some(tag => tag.get('rel')?.split(/\s+/).includes('icon') && tag.get('href') === '/favicon.ico')) fail(route, 'must use the Deplexo favicon');
+    if (!icons.some(tag => tag.get('rel') === 'apple-touch-icon' && tag.get('href') === '/apple-touch-icon.png')) fail(route, 'must use the Deplexo touch icon');
+
     const notFound = route === '/404/' || route === '/404.html';
     const directives = metas.filter((tag) => ['robots', 'googlebot'].includes(tag.get('name')?.toLowerCase()))
       .flatMap((tag) => (tag.get('content') ?? '').toLowerCase().split(/[\s,]+/));
