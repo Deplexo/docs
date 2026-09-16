@@ -1,27 +1,48 @@
 ---
-import DefaultHead from '@astrojs/starlight/components/Head.astro';
-const { entry } = Astro.locals.starlightRoute;
-const canonical = new URL(Astro.url.pathname, 'https://docs.deplexo.com').href;
+const { entry, head } = Astro.locals.starlightRoute;
+const origin = 'https://docs.deplexo.com';
+const canonical = new URL(Astro.url.pathname, origin).href;
 const isHome = Astro.url.pathname === '/';
 const isNotFound = entry.id === '404';
-const schema = isHome ? {
+const title = isHome ? 'Deplexo Docs — Deployment guides and reference' : `${entry.data.title} | Deplexo Docs`;
+const image = `${origin}/social.png`;
+const imageAlt = 'Deplexo documentation — Deploy, configure, and operate your apps';
+const overridden = new Set(['viewport', 'theme-color', 'color-scheme', 'application-name', 'author', 'robots', 'keywords', 'og:title', 'og:type', 'og:site_name', 'og:locale', 'og:image', 'og:image:width', 'og:image:height', 'og:image:alt', 'twitter:card', 'twitter:site', 'twitter:title', 'twitter:description', 'twitter:image', 'twitter:image:alt']);
+const inheritedHead = head.filter(item => item.tag !== 'title' && !(item.tag === 'meta' && overridden.has(String(item.attrs?.name ?? item.attrs?.property ?? ''))));
+const organization = { '@type': 'Organization', '@id': 'https://deplexo.com/#organization', name: 'Deplexo', url: 'https://deplexo.com', logo: 'https://deplexo.com/logo.png' };
+const website = { '@type': 'WebSite', '@id': `${origin}/#website`, name: 'Deplexo Docs', url: `${origin}/`, publisher: { '@id': organization['@id'] } };
+const schema = {
   '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Deplexo Docs',
-  alternateName: 'Deplexo Documentation',
-  url: 'https://docs.deplexo.com/',
-} : {
-  '@context': 'https://schema.org',
-  '@type': 'TechArticle',
-  headline: entry.data.title,
-  description: entry.data.description,
-  mainEntityOfPage: canonical,
-  author: { '@type': 'Organization', name: 'Deplexo', url: 'https://deplexo.com' },
-  isPartOf: { '@type': 'WebSite', name: 'Deplexo Docs', url: 'https://docs.deplexo.com/' },
+  '@graph': [organization, website, ...isHome ? [] : [
+    { '@type': 'TechArticle', headline: entry.data.title, description: entry.data.description, mainEntityOfPage: canonical, author: { '@id': organization['@id'] }, publisher: { '@id': organization['@id'] }, isPartOf: { '@id': website['@id'] } },
+    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Documentation', item: `${origin}/` }, { '@type': 'ListItem', position: 2, name: entry.data.title, item: canonical }] },
+  ]],
 };
 ---
-<DefaultHead />
-<meta property="og:image" content="https://docs.deplexo.com/social.png" />
-<meta property="og:image:alt" content="Deplexo documentation — Deploy, configure, and operate your applications" />
-<meta name="twitter:image" content="https://docs.deplexo.com/social.png" />
+{inheritedHead.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
+<title>{title}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="application-name" content="Deplexo" />
+<meta name="author" content="Deplexo" />
+<meta name="color-scheme" content="dark light" />
+<meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#dde1e4" media="(prefers-color-scheme: light)" />
+<meta name="robots" content={isNotFound ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
+<meta name="keywords" content="Deplexo docs, deplexo.yaml, deployment guides, container hosting, Next.js hosting, Go bots" />
+<meta property="og:site_name" content="Deplexo" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content={isHome || isNotFound ? 'website' : 'article'} />
+<meta property="og:title" content={title} />
+<meta property="og:image" content={image} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@deplexo" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={entry.data.description} />
+<meta name="twitter:image" content={image} />
+<meta name="twitter:image:alt" content={imageAlt} />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin />
 {!isNotFound && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema).replaceAll('<', '\\u003c')} />}
