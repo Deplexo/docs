@@ -1,0 +1,15 @@
+---
+import Search from '@astrojs/starlight/components/Search.astro';
+import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro';
+import DocsIcon from './DocsIcon.astro';
+---
+<div class="docs-header">
+  <div class="brand-group">
+    <a class="brand" href="https://deplexo.com" aria-label="Deplexo home"><img src="/logo.webp" width="44" height="44" alt="" /><span>Deplexo</span></a>
+    <span class="brand-divider" aria-hidden="true">/</span><a href="/" class="docs-label">Docs</a>
+  </div>
+  <div class="header-search"><Search /></div>
+  <nav class="header-links" aria-label="Deplexo links"><a href="https://deplexo.com/blog">Blog</a><a href="https://status.deplexo.com">Status</a></nav>
+  <div class="desktop-theme"><ThemeSelect /></div>
+  <a class="dashboard-link" href="https://deplexo.com/apps">Dashboard <DocsIcon size={15} /></a>
+</div>
