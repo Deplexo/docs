@@ -14,7 +14,7 @@
 
 ## Run locally
 
-Use Node.js 22.12 or later in the Node 22 LTS line.
+Use Node.js 24 LTS.
 
 ```sh
 npm ci
