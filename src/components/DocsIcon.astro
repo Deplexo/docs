@@ -1,0 +1,16 @@
+---
+interface Props { name?: 'arrow' | 'code' | 'box' | 'git' | 'globe' | 'terminal' | 'book' | 'settings' | 'bot'; size?: number }
+const { name = 'arrow', size = 20 } = Astro.props;
+const paths = {
+  arrow: ['M5 12h14m-5-5 5 5-5 5'],
+  code: ['m8 7-5 5 5 5m8-10 5 5-5 5m-3-12-2 20'],
+  box: ['m12 3 9 5-9 5-9-5 9-5Zm-9 5v9l9 5 9-5V8m-9 5v9M7.5 5.5l9 5'],
+  git: ['M6 6v12m12-12v4c0 4-12 0-12 4', 'M8 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 20a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM20 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z'],
+  globe: ['M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18Z'],
+  terminal: ['M4 4h16v16H4V4Zm3 4 3 3-3 3m6 2h4'],
+  book: ['M3 4h6l3 2 3-2h6v15h-6l-3 2-3-2H3V4Zm9 2v15'],
+  settings: ['M4 7h16M4 17h16M9 4v6m6 4v6'],
+  bot: ['M5 8h14v12H5V8Zm7-5v5M2 12v4m20-4v4M9 12v2m6-2v2m-6 3h6'],
+};
+---
+<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{paths[name].map(d => <path d={d} />)}</svg>

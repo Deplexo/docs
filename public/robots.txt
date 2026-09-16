@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://docs.deplexo.com/sitemap-index.xml

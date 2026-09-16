@@ -1,0 +1,16 @@
+{
+  "/docs": "https://docs.deplexo.com/",
+  "/docs/quickstart": "https://docs.deplexo.com/getting-started/quickstart/",
+  "/docs/templates": "https://docs.deplexo.com/getting-started/templates/",
+  "/docs/nextjs": "https://docs.deplexo.com/guides/nextjs/",
+  "/docs/telegram-bot": "https://docs.deplexo.com/guides/telegram-bot/",
+  "/docs/discord-bot": "https://docs.deplexo.com/guides/discord-bot/",
+  "/docs/docker": "https://docs.deplexo.com/guides/docker/",
+  "/docs/configuration": "https://docs.deplexo.com/reference/configuration/",
+  "/docs/environment": "https://docs.deplexo.com/guides/environment/",
+  "/docs/domains": "https://docs.deplexo.com/guides/domains/",
+  "/docs/storage": "https://docs.deplexo.com/operations/storage/",
+  "/docs/logs": "https://docs.deplexo.com/operations/logs/",
+  "/docs/deployments": "https://docs.deplexo.com/operations/deployments/",
+  "/docs/troubleshooting": "https://docs.deplexo.com/operations/troubleshooting/"
+}
