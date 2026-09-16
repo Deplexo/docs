@@ -1,0 +1,25 @@
+---
+title: Frequently asked questions
+description: Answers about deploying on Deplexo, running bots, storing data, and the platform's content and account rules.
+---
+
+## Deploying and running apps
+
+<div class="faq-list">
+<details><summary>What can I deploy on Deplexo?</summary><div><p>You can deploy websites, APIs, and long-running bots that run in a container and comply with the platform rules. Use your own Dockerfile or start with a supported template.</p><a href="/getting-started/quickstart/">Deploy your first app →</a></div></details>
+<details><summary>Can I deploy a private Git repository?</summary><div><p>Yes. Connect the repository's Git provider and grant Deplexo access to that repository. Store runtime credentials in environment variables, rather than committing them to your repository.</p><a href="/guides/environment/">Configure environment variables →</a></div></details>
+<details><summary>Why is my web app not responding after deployment?</summary><div><p>Check the build and runtime logs. Your server must bind to <code>0.0.0.0</code> and listen on the configured port. Also check that required environment variables are present and that the process is staying within its resource limits.</p><a href="/operations/troubleshooting/">Troubleshoot a deployment →</a></div></details>
+<details><summary>Does a Telegram or Discord bot need a website?</summary><div><p>No. A polling Telegram bot or Discord Gateway bot uses an outgoing connection. Deplexo currently assigns an application URL and checks a port for all apps, so a bot may produce a port warning. Verify it with a real command in Telegram or Discord and inspect its runtime logs.</p><a href="/guides/telegram-bot/">Telegram guide →</a><a href="/guides/discord-bot/">Discord guide →</a></div></details>
+<details><summary>Will my files survive a restart or redeployment?</summary><div><p>Do not rely on the container filesystem or temporary files for durable data. Use a persistent volume for supported persistent files and keep independent backups. Review the storage guide for the scope and limitations of persistence.</p><a href="/operations/storage/">Understand storage →</a></div></details>
+<details><summary>Can I use my own domain?</summary><div><p>Yes. Add the domain to your application, configure the DNS records shown in the dashboard, and wait for verification and HTTPS provisioning before relying on it.</p><a href="/guides/domains/">Connect a custom domain →</a></div></details>
+</div>
+
+## Content and account rules
+
+<div class="faq-list">
+<details><summary>Can I host copyrighted material or NSFW content?</summary><div><p>You may not host or distribute copyrighted material without permission or another legal right to do so. NSFW content, including pornography and sexually explicit material, is prohibited. These restrictions also apply to files and content distributed by bots or uploaded by your users.</p><a href="/reference/acceptable-use/#prohibited-content">Read the content rules →</a></div></details>
+<details><summary>Can I create multiple accounts for more free resources?</summary><div><p>No. Using alternate accounts to obtain extra free-tier resources, bypass platform limits, or evade a suspension or ban is account abuse. A different repository or sign-in provider does not change that.</p><a href="/reference/acceptable-use/#multiple-account-and-alternate-account-abuse">Read the account rules →</a></div></details>
+<details><summary>What happens if I abuse the platform with alternate accounts?</summary><div><p><strong>All associated accounts are banned, and all of their applications and stored data are permanently purged.</strong> Enforcement is not limited to the account where the abuse was first detected. Do not expect purged data to be recoverable or create another account to evade enforcement.</p><a href="/reference/acceptable-use/#enforcement-and-data-deletion">Understand enforcement →</a></div></details>
+<details><summary>What other workloads are prohibited?</summary><div><p>Malware, phishing, credential theft, cryptomining, botnets, DDoS tooling, illegal activity, and attempts to compromise the host or other tenants are prohibited. Workloads must also respect the platform's resource limits.</p><a href="/reference/acceptable-use/">Read the acceptable-use policy →</a></div></details>
+<details><summary>How do I report abuse or ask about an account restriction?</summary><div><p>Contact support with the relevant application URL or ID and a short explanation. Do not include credentials or copies of illegal material. If your account is restricted, use support instead of creating an alternate account.</p><a href="https://deplexo.com/support">Contact support →</a></div></details>
+</div>
