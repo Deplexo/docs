@@ -1,0 +1,4 @@
+@layer starlight { :root { --sl-color-accent-low: #142854; --sl-color-accent: #467cff; --sl-color-accent-high: #bdd0ff; --sl-font: system-ui, sans-serif; --sl-content-width: 48rem; } :root[data-theme="light"] { --sl-color-accent-low: #e9efff; --sl-color-accent: #2859d5; --sl-color-accent-high: #163476; } }
+.hero h1 { letter-spacing: -.045em; }
+.sl-markdown-content h2 { letter-spacing: -.025em; }
+.sl-markdown-content code { overflow-wrap: anywhere; }

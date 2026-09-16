@@ -1,0 +1,27 @@
+---
+import DefaultHead from '@astrojs/starlight/components/Head.astro';
+const { entry } = Astro.locals.starlightRoute;
+const canonical = new URL(Astro.url.pathname, 'https://docs.deplexo.com').href;
+const isHome = Astro.url.pathname === '/';
+const isNotFound = entry.id === '404';
+const schema = isHome ? {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Deplexo Docs',
+  alternateName: 'Deplexo Documentation',
+  url: 'https://docs.deplexo.com/',
+} : {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: entry.data.title,
+  description: entry.data.description,
+  mainEntityOfPage: canonical,
+  author: { '@type': 'Organization', name: 'Deplexo', url: 'https://deplexo.com' },
+  isPartOf: { '@type': 'WebSite', name: 'Deplexo Docs', url: 'https://docs.deplexo.com/' },
+};
+---
+<DefaultHead />
+<meta property="og:image" content="https://docs.deplexo.com/social.png" />
+<meta property="og:image:alt" content="Deplexo documentation — Deploy, configure, and operate your applications" />
+<meta name="twitter:image" content="https://docs.deplexo.com/social.png" />
+{!isNotFound && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema).replaceAll('<', '\\u003c')} />}
