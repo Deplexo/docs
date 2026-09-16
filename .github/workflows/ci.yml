@@ -29,6 +29,10 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Check deployment configuration
+        run: |
+          bash -n scripts/deploy.sh
+          docker compose --file deploy/compose.yaml config --quiet
       - name: Check source
         run: npm run check
       - name: Build documentation
