@@ -1,0 +1,48 @@
+name: Validate documentation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Check deployment configuration
+        run: |
+          bash -n scripts/deploy.sh
+          docker compose --file deploy/compose.yaml config --quiet
+      - name: Check source
+        run: npm run check
+      - name: Build documentation
+        run: npm run build
+      - name: Check generated pages and SEO
+        run: node scripts/check-site.mjs
+      - name: Save static build for review
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: deplexo-docs-static
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
