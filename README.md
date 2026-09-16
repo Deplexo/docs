@@ -8,6 +8,8 @@ Use Node.js 22.12 or newer. Run `npm ci`, then `npm run dev`. Content lives in `
 
 ## Publish
 
+For the standalone Docker host and Cloudflare Tunnel setup, see [Hosting the docs](deploy/README.md). `bash scripts/deploy.sh` builds a committed revision and starts the health-checked service.
+
 Build static output in `dist`, or deploy the included Dockerfile. Connect docs.deplexo.com as a custom domain. The site URL is intentionally fixed so canonical tags and sitemaps remain correct. The included legacy-redirects.json records the intended permanent redirects from deplexo.com/docs. Apply these redirects in the edge/router configuration when the new site launches; this repository does not modify the control plane. Submit sitemap-index.xml in Google Search Console after deployment.
 
 Audit the actual existing URLs before applying the redirect map, including trailing-slash variants. Use direct HTTP 301 or 308 redirects to the matching article and retain them for at least one year. Update navigation and internal links to the new URLs at cutover. Verify the domain in Search Console, submit the new sitemap, and monitor indexing and crawl errors. Keep one canonical copy of each article; do not publish identical documentation on both hosts.
