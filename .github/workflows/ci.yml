@@ -25,7 +25,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: '24'
+          node-version: '26'
           cache: npm
       - name: Install dependencies
         run: npm ci
@@ -39,6 +39,16 @@ jobs:
         run: npm run build
       - name: Check generated pages and SEO
         run: node scripts/check-site.mjs
+      - name: Build and test Docker image
+        run: |
+          docker build --pull -t deplexo-docs:test .
+          docker run -d --name docs-test -p 127.0.0.1:3000:3000 deplexo-docs:test
+          trap 'docker logs docs-test; docker rm -f docs-test' EXIT
+          curl --fail --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:3000/healthz
+          curl --fail --silent --show-error http://127.0.0.1:3000/ -o /tmp/docs-home.html
+          test -s /tmp/docs-home.html
+          docker cp docs-test:/usr/share/nginx/html /tmp/docs-container-site
+          node scripts/check-site.mjs /tmp/docs-container-site
       - name: Save static build for review
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
