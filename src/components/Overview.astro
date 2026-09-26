@@ -32,5 +32,5 @@ const guides = [
     <div class="resource-links">{guides.map(item => <a href={item.href}><div class="resource-icon"><DocsIcon name={item.icon} size={19} /></div><div><h3>{item.title}</h3><p>{item.description}</p></div><DocsIcon size={15} /></a>)}</div>
   </section>
   <aside class="runtime-note" id="understand-the-runtime"><DocsIcon name="box" size={20} /><div><h2>Know your runtime</h2><p>Apps run in containers with a read-only filesystem. Use temporary storage for scratch files and a persistent volume for data that must survive redeployments. <a href="/operations/storage/">Read about storage <span aria-hidden="true">→</span></a></p></div></aside>
-  <div class="overview-help"><a href="/getting-started/faq/">Frequently asked questions <DocsIcon size={15} /></a><a href="/reference/open-source/">Open-source projects <DocsIcon size={15} /></a><a href="/reference/acceptable-use/">Acceptable use and account rules <DocsIcon size={15} /></a></div>
+  <div class="overview-help"><a href="/getting-started/faq/">Frequently asked questions <DocsIcon size={15} /></a><a href="/reference/acceptable-use/">Acceptable use and account rules <DocsIcon size={15} /></a></div>
 </div>

@@ -22,7 +22,7 @@ export default defineConfig({
       { label: 'Build and deploy', items: [{ label: 'CLI', slug: 'guides/cli' }, { label: 'Docker and builds', slug: 'guides/docker' }, { label: 'Next.js', slug: 'guides/nextjs' }, { label: 'Telegram bots', slug: 'guides/telegram-bot' }, { label: 'Discord bots', slug: 'guides/discord-bot' }] },
       { label: 'Configuration', items: [{ label: 'Environment variables', slug: 'guides/environment' }, { label: 'Custom domains', slug: 'guides/domains' }] },
       { label: 'Operations', items: [{ label: 'Deployments', slug: 'operations/deployments' }, { label: 'Logs', slug: 'operations/logs' }, { label: 'Storage', slug: 'operations/storage' }, { label: 'Troubleshooting', slug: 'operations/troubleshooting' }] },
-      { label: 'Reference', items: [{ label: 'deplexo.yaml', slug: 'reference/configuration' }, { label: 'User API', slug: 'reference/user-api' }, { label: 'Open-source projects', slug: 'reference/open-source' }] },
+      { label: 'Reference', items: [{ label: 'deplexo.yaml', slug: 'reference/configuration' }, { label: 'User API', slug: 'reference/user-api' }] },
       { label: 'Help and policies', items: [{ label: 'FAQs', slug: 'getting-started/faq' }, { label: 'Acceptable use', slug: 'reference/acceptable-use' }] },
     ],
   })],

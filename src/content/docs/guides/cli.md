@@ -103,4 +103,4 @@ deplexo apps --help
 
 `upgrade` asks before replacing the executable and verifies the archive checksum and the downloaded executable. Use `--yes` to skip the prompt. If you installed through a package manager, use that manager to update.
 
-The [CLI README](https://github.com/Deplexo/cli#readme) covers profiles, output formats, exit codes, and building from source. See [open-source projects](/reference/open-source/) for the other Deplexo repositories.
+The [CLI README](https://github.com/Deplexo/cli#readme) covers profiles, output formats, exit codes, and building from source.
