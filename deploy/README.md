@@ -1,6 +1,6 @@
 # Hosting the docs
 
-The static documentation runs in an unprivileged Nginx container. Docker Compose binds it to `127.0.0.1:8094`; an existing Cloudflare Tunnel publishes `https://docs.deplexo.com`. Cloudflare handles public TLS. No database or writable application data is required.
+Nginx serves the static documentation from an unprivileged container. Docker Compose binds it to `127.0.0.1:8094`; an existing Cloudflare Tunnel publishes `https://docs.deplexo.com`. Cloudflare handles public TLS. The site needs no database or writable application data.
 
 ## Deploy an update
 
@@ -43,4 +43,4 @@ To roll back to a previously built image:
 DEPLEXO_DOCS_IMAGE=deplexo-docs:PREVIOUS_FULL_COMMIT docker compose --file deploy/compose.yaml up --detach --wait --wait-timeout 60
 ```
 
-Retain prior image tags until the current deployment has been verified. The Compose service uses a read-only filesystem, drops Linux capabilities, limits memory and process count, and rotates logs.
+Keep previous image tags until you have verified the current deployment. The Compose service uses a read-only filesystem, drops Linux capabilities, limits memory and process count, and rotates logs.

@@ -21,7 +21,7 @@ TELEGRAM_BOT_TOKEN=<set-in-deplexo>
 
 ## Understand when variables are available
 
-Application variables are injected into the running container. They are not automatically available to dependency installation or Dockerfile RUN commands during the image build.
+Deplexo passes application variables to the running container. Dependency installation and Dockerfile RUN commands do not automatically receive them during the build.
 
 Make public build configuration explicit. Avoid embedding secrets in Dockerfile ARG or ENV instructions, image layers, frontend bundles, or repository build commands. Restructure server code to read secrets at runtime when possible.
 
@@ -31,7 +31,7 @@ Make public build configuration explicit. Avoid embedding secrets in Dockerfile 
 
 ## Apply a configuration change
 
-After saving environment changes, redeploy or restart through the dashboard so a new container receives the configuration. Editing a stored value does not mutate an already-running process's environment.
+After saving environment changes, redeploy or restart through the dashboard so a new container receives the configuration. A running process keeps its old environment until it is replaced.
 
 Verify the change through application behavior and logs. A public frontend variable embedded during a build also requires rebuilding with the intended build configuration.
 
@@ -41,7 +41,7 @@ Verify the change through application behavior and logs. A public frontend varia
 
 ## Rotate and redact secrets
 
-Rotate credentials with the issuing provider, update the corresponding variable, and redeploy. Where the provider supports overlapping credentials, verify the replacement before revoking the old credential.
+Rotate credentials with the issuing provider, update the corresponding variable, and redeploy. If the provider lets both credentials remain active, test the replacement before revoking the old one.
 
 Do not print the entire process environment. Log whether a required value is present rather than its contents. Remove tokens, passwords, authorization headers, and sensitive customer data before sharing logs or screenshots.
 

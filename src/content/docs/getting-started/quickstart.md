@@ -7,9 +7,9 @@ description: "Connect a repository, configure its runtime, and verify your first
 
 ## Before you start
 
-You need a Deplexo account and a git repository containing an application. For private repositories, connect the corresponding git provider and grant access to the repository. Keep credentials out of the repository; add them during deployment.
+You need a Deplexo account and an app in a Git repository. For a private repository, connect your Git provider and grant Deplexo access. Add credentials in the deployment form so they stay out of your source code.
 
-Run the app locally first. Confirm its start command, listening port if it serves HTTP, and database or storage requirements. Official templates document these requirements in their README.
+Run the app locally first. Check how it starts, which port it listens on if it serves HTTP, and what storage or database it needs. Each official template lists these details in its README.
 
 - [Choose a template](https://github.com/Deplexo/examples)
 - [Connect a git provider](https://deplexo.com/git)
@@ -41,13 +41,15 @@ For a web service, set PORT to the port your server listens on and bind the serv
 - [Deploy an application](https://deplexo.com/add)
 - [Environment variables](/guides/environment/)
 
+You can also deploy from your terminal with the [Deplexo CLI](/guides/cli/) or call the [user API](/reference/user-api/) from a script.
+
 <span id="verify-the-result"></span>
 
 ## Verify the result
 
 Watch the deployment's build logs. After startup, open a web service's application URL and exercise a real route or action. For a bot, send a command through Telegram or Discord and check its runtime logs for a successful connection.
 
-A running process alone does not prove that authentication, a database connection, or a user action works. Compare the deployment commit, environment variables, and logs with your local setup if the result is unexpected.
+Test the features your app depends on, including sign-in and database access. If something fails, compare the deployed commit, environment variables, and logs with your local setup.
 
 - [Read deployment logs](/operations/logs/)
 - [Diagnose a failure](/operations/troubleshooting/)
@@ -56,7 +58,7 @@ A running process alone does not prove that authentication, a database connectio
 
 ## Ship your next change
 
-Commit and push a small change to the connected branch. With automatic deployment enabled, the git webhook triggers a new deployment. Otherwise, redeploy from the application dashboard.
+Commit and push a small change to the connected branch. With automatic deployment enabled, the Git webhook triggers a new deployment. Otherwise, redeploy from the application dashboard.
 
 Once the app works on its default URL, attach a custom domain if needed. Set up your own backup process before relying on persistent data for production workloads.
 

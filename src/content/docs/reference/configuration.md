@@ -9,7 +9,7 @@ description: "Configure Dockerfile paths, generated builds, commands, and runtim
 
 Add deplexo.yaml to the application directory used as the build context. For a monorepo, choose that directory with Root directory in the dashboard. The file belongs alongside the application's Dockerfile or dependency manifest.
 
-Repository settings are versioned with code. Keep secrets in environment variables, and use the dashboard for resources, region, persistent mount path, and automatic deployment settings.
+Commit repository settings with your code so you can track their changes. Keep secrets in environment variables, and use the dashboard for resources, region, persistent mount path, and automatic deployment settings.
 
 ```yaml
 framework: dockerfile
@@ -31,7 +31,7 @@ dockerfile selects a path relative to the configured application root. Keep COPY
 
 install replaces the generated dependency installation command. build runs the application build after installation. start sets the runtime command for a generated image. For custom Dockerfiles, put these steps in the Dockerfile itself.
 
-Nonempty dashboard command overrides take precedence over corresponding repository commands. Avoid conflicting values in both places. Clear an override when the repository should control that command again.
+A command set in the dashboard overrides the corresponding repository command. Keep the values consistent, or clear the dashboard override to use the repository setting.
 
 ```yaml
 framework: node
@@ -57,7 +57,7 @@ For a polling bot or Discord Gateway bot, the process does not need an HTTP list
 
 Set the repository, root directory, region, and resource choices in the deployment form. Environment variables supply runtime configuration. The persistent mount defaults to /data and can be changed in application settings.
 
-Review effective dashboard settings when a build behaves differently from the repository file. Record intentional overrides in project documentation so teammates can reproduce the deployment.
+Check the dashboard settings when a build does not follow the repository file. Record intentional overrides in project documentation so teammates can reproduce the deployment.
 
 - [Environment variables](/guides/environment/)
 - [Storage and mounts](/operations/storage/)

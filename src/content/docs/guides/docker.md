@@ -7,7 +7,7 @@ description: "Make your build reproducible and your container compatible with De
 
 ## Choose a build method
 
-Bring a Dockerfile for explicit control over system packages, compilation, assets, and startup. Framework-generated builds are useful when standard install, build, and start steps fit your application.
+Use a Dockerfile to control system packages, compilation, assets, and startup. Choose a framework-generated build if its install, build, and start steps fit your app.
 
 Select the intended method in the dashboard. When Dockerfile is selected, the repository must contain it at the configured path. Adding framework settings alone does not override an explicitly selected Dockerfile build.
 
@@ -48,9 +48,9 @@ CMD ["node", "server.js"]
 
 ## Test runtime permissions
 
-Use an unprivileged image user and ensure it can read packaged assets. Containers run without added capabilities and with a read-only root. Writable locations are the temporary directory and configured persistent mount.
+Run the image as an unprivileged user and check that it can read the packaged assets. Containers run without added capabilities and with a read-only root. Writable locations are the temporary directory and configured persistent mount.
 
-Ensure the image user can write where the app needs to persist data. Compiled application binaries belong in the image, because the temporary and data mounts are not executable. Test with these constraints before deployment.
+Check that the image user can write to the directory where the app stores data. Compiled application binaries belong in the image, because the temporary and data mounts are not executable. Test with these constraints before deployment.
 
 - [Filesystem constraints](/operations/storage/)
 
@@ -58,7 +58,7 @@ Ensure the image user can write where the app needs to persist data. Compiled ap
 
 ## Diagnose build failures
 
-Read the first failing build step and the preceding lines. A missing lockfile, case-sensitive path mismatch, absent package script, or incorrect root directory can explain a build that worked locally.
+Find the first failing build step and read the lines before it. A missing lockfile, case-sensitive path mismatch, absent package script, or incorrect root directory can explain a build that worked locally.
 
 Reproduce the build from a fresh checkout and committed files. Check the failing command and resource usage before changing limits. A successful image build still needs a working start command and runtime configuration.
 

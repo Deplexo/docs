@@ -7,7 +7,7 @@ description: "Deploy a Next.js website with a production build, clear configurat
 
 ## Choose a static portfolio or a server
 
-The portfolio template uses a static export for its content pages. The website template uses a standalone Next.js server. Choose the server when you need server rendering, route handlers, or other runtime server features.
+The portfolio template uses a static export for its content pages. The website template uses a standalone Next.js server. Use the server template for server rendering, route handlers, or other features that need a running server.
 
 Both starters include production Dockerfiles and dependency lockfiles. Follow the README for the chosen template. Use npm ci for reproducible installs and npm run build to catch production build errors before deployment.
 
@@ -41,7 +41,7 @@ export default nextConfig;
 
 NEXT_PUBLIC_ values are public and are commonly embedded into browser code during the build. Changing a runtime variable does not rewrite a JavaScript bundle already produced by the build. Never use a NEXT_PUBLIC_ variable for a secret.
 
-Deplexo application variables are supplied to the running container. Design server-only configuration to be read at request time when appropriate. If a page is prerendered during the build, its data requirements apply during the build too; a runtime database URL cannot satisfy that earlier step.
+Deplexo supplies application variables to the running container. Read server-only configuration at request time where possible. A page prerendered during the build needs its data then, so a database URL supplied only at runtime will not be available.
 
 - [Environment variable behavior](/guides/environment/)
 - [Next.js environment variables](https://nextjs.org/docs/app/guides/environment-variables)
@@ -52,7 +52,7 @@ Deplexo application variables are supplied to the running container. Design serv
 
 The application filesystem is read-only. The standalone website starter routes its cache directory to /tmp. Preserve that runtime setup when changing the Dockerfile. Temporary cache files are disposable and share the runtime's 100 MB temporary storage limit.
 
-Introducing image optimization, incremental rendering, or a custom cache handler can add storage requirements beyond the starter. Test those features with a read-only root filesystem. Store uploads in the persistent data mount or external object storage, not beside application source files.
+Image optimization, incremental rendering, or a custom cache handler may need more storage than the starter provides. Test those features with a read-only root filesystem. Store uploads in the persistent data mount or external object storage, not beside application source files.
 
 - [Storage and filesystem](/operations/storage/)
 - [Next.js self-hosting guidance](https://nextjs.org/docs/app/guides/self-hosting)
@@ -61,7 +61,7 @@ Introducing image optimization, incremental rendering, or a custom cache handler
 
 ## Make it yours and launch
 
-Update portfolio content, social links, page titles, descriptions, and social preview images. Replace example domains in metadata and canonical URLs with the actual public URL. Remove placeholder content before making the site discoverable.
+Update portfolio content, social links, page titles, descriptions, and social preview images. Replace example domains in metadata and canonical URLs with the actual public URL. Remove placeholder content before publishing the site.
 
 After deployment, test direct navigation to a nested route, refresh that route, load assets, and submit any forms. Add a custom domain after the default URL works. A contact form needs a real delivery service and input validation; a visual form alone does not send mail.
 

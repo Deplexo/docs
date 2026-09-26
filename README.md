@@ -21,7 +21,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:4321`. Changes reload as you edit.
+Open `http://localhost:4321`. The page reloads when you save a change.
 
 ## Edit the docs
 
@@ -49,7 +49,7 @@ Check the page in the browser, then open a pull request. CI validates the build,
 
 ## Deploy
 
-The site runs at **[docs.deplexo.com](https://docs.deplexo.com)**. See [deployment instructions](deploy/README.md) for the Docker and Cloudflare setup.
+The site runs at [docs.deplexo.com](https://docs.deplexo.com). See [deployment instructions](deploy/README.md) for the Docker and Cloudflare setup.
 
 ## License
 

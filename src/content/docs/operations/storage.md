@@ -9,13 +9,13 @@ description: "Choose the right location for temporary files, persistent applicat
 
 The image contains code, assets, and installed dependencies. Its root filesystem is read-only at runtime. Writing beside source files, installing packages at startup, or creating a cache under the application directory can fail.
 
-Build executable files and dependencies into the image. Configure framework caches, session files, and uploads to use appropriate writable locations. An unprivileged application user must also have permission to write there.
+Build executable files and dependencies into the image. Point framework caches, session files, and uploads at a writable directory. An unprivileged application user must also have permission to write there.
 
 <span id="temporary-files"></span>
 
 ## Use /tmp for disposable files
 
-The temporary directory is writable and limited to 100 MB. Use it for small intermediate files the application can recreate. Its contents are not durable across container replacement.
+The temporary directory is writable and limited to 100 MB. Use it for small intermediate files the application can recreate. Its contents do not survive container replacement.
 
 The temporary mount does not allow execution. Do not download a binary into /tmp and expect to run it. Clean up temporary uploads and processing files promptly so one request cannot exhaust the available space.
 
@@ -34,7 +34,9 @@ SQLITE_PATH=/data/app.db
 
 <span id="durability-boundaries"></span>
 
-## Know the durability boundary
+<span id="know-the-durability-boundary"></span>
+
+## Understand where files are stored
 
 The volume belongs to the worker hosting the application. It is not a shared filesystem across regions or independent apps. Do not assume recreating the app on another worker transfers its files.
 
@@ -46,7 +48,7 @@ Deleting an application removes its data volume. Export data before deletion or 
 
 Back up to an independent destination and test restoration. Use database-aware backup methods for SQLite or another database so backups are consistent while the application runs.
 
-Use external object storage for large uploads or files needing independent durability and distribution. A mounted volume preserves files across redeployment, but does not replace a backup plan.
+Use external object storage for large uploads or files that need storage and distribution independent of the app. A mounted volume preserves files across redeployment, but does not replace a backup plan.
 
 - [Deployment lifecycle](/operations/deployments/)
 - [Troubleshoot storage](/operations/troubleshooting/#filesystem-errors)

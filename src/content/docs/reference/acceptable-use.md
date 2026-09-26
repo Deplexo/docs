@@ -7,9 +7,9 @@ These rules apply to every Deplexo account, application, bot, and hosted file, o
 
 ## Prohibited content
 
-- **Copyright infringement:** pirated movies, music, software, books, or other copyrighted material you do not have permission or a legal right to host or distribute. Linking a bot or service to unauthorized distribution does not make it acceptable.
-- **NSFW content:** pornography, sexually explicit material, and applications or bots used to host or distribute that content.
-- **Illegal content or activity:** content prohibited by applicable law, including unlawful exploitation and abuse.
+- Pirated movies, music, software, books, or other copyrighted material you do not have permission or a legal right to host or distribute. Linking a bot or service to unauthorized distribution does not make it acceptable.
+- NSFW content, including pornography, sexually explicit material, and applications or bots used to host or distribute that content.
+- Illegal content or activity, including unlawful exploitation and abuse.
 
 Owning an account or using a paid plan does not grant permission to host prohibited content. You are responsible for content uploaded or distributed through your application, including content submitted by its users.
 
@@ -34,10 +34,10 @@ Do not use extra accounts as a substitute for a suitable plan or as a way to con
 
 Violations can result in applications being stopped or removed, account suspension or bans, and permanent deletion of applications and their stored data. For confirmed alternate-account abuse, enforcement covers all associated accounts and all of their apps and data.
 
-Permanent purges are destructive. Do not expect deleted applications or data to be recoverable. Keep independent backups of data you are permitted to host; backups do not make prohibited content or abusive activity acceptable.
+Permanently deleted applications and data cannot be recovered. Keep independent backups of data you are permitted to host; backups do not make prohibited content or abusive activity acceptable.
 
 ## Report abuse or ask about a restriction
 
-Use [Deplexo support](https://deplexo.com/support) to report an abusive application or ask about an account restriction. Include the application URL or ID and a concise description. Do not submit passwords, API keys, bot tokens, or copies of illegal material.
+Use [Deplexo support](https://deplexo.com/support) to report an abusive application or ask about an account restriction. Include the application URL or ID and a short description of the issue. Do not submit passwords, API keys, bot tokens, or copies of illegal material.
 
 If an account is restricted, contact support rather than creating an alternate account to bypass the restriction.

@@ -9,7 +9,7 @@ description: "Work from the failing stage to a specific cause: build, startup, r
 
 Check the deployment commit, root directory, Dockerfile path, and first failing command. Confirm the lockfile is committed and agrees with the dependency manifest. Run the production build from a clean checkout.
 
-If the build needs a variable available only in Deplexo's runtime environment, change the build or application design. For timeout or resource errors, inspect the failing command and resource information before increasing limits.
+If the build needs a variable available only in Deplexo's runtime environment, change the build or application design. For timeouts or resource errors, check which command failed and how much CPU or memory it used before increasing limits.
 
 - [Docker and builds](/guides/docker/)
 - [Environment availability](/guides/environment/#runtime-not-build)
@@ -20,7 +20,7 @@ If the build needs a variable available only in Deplexo's runtime environment, c
 
 Read runtime logs for the exit reason. Confirm the start command points to a file in the final image, required credentials are set, and runtime libraries are present.
 
-A worker must keep its process running. A script that backgrounds the bot and exits also ends the container's main process. Fix the cause of repeated crashes; restarting repeatedly is not a recovery strategy.
+A worker must keep its process running. A script that backgrounds the bot and exits also ends the container's main process. If the app keeps crashing, use the logs to find and fix the cause before restarting it again.
 
 <span id="web-service-unreachable"></span>
 
@@ -36,7 +36,7 @@ Test the default application URL before a custom domain. If that fails, inspect 
 
 Check bot identity, credentials, and whether the command is implemented. For Telegram polling conflicts, stop duplicate consumers and remove an existing webhook. Check privacy settings if private messages work but group messages do not.
 
-For Discord, verify installation scopes, registration, guild configuration, effective channel permissions, and intents. Test the starter's documented command before custom handlers.
+For Discord, verify installation scopes, registration, guild configuration, effective channel permissions, and intents. Test the command from the starter README before checking your custom handlers.
 
 - [Telegram guide](/guides/telegram-bot/)
 - [Discord guide](/guides/discord-bot/)
@@ -57,7 +57,7 @@ Files in /tmp are temporary and limited in size. Image files are replaced by dep
 
 Verify the exact TXT record and routing target shown in the dashboard. Check authoritative DNS records, including whether the provider appended the zone name twice. TXT verification does not replace the traffic CNAME.
 
-Allow for DNS propagation and certificate provisioning. Keep the verification record after setup. If the application URL works but the custom hostname fails, include the hostname, DNS lookup results, and browser error in your support request.
+Wait for DNS changes to propagate and the HTTPS certificate to be issued. Keep the verification record after setup. If the application URL works but the custom hostname fails, include the hostname, DNS lookup results, and browser error in your support request.
 
 - [Custom-domain setup](/guides/domains/)
 - [Contact support](https://deplexo.com/support)

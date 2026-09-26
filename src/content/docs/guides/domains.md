@@ -9,7 +9,7 @@ description: "Connect your hostname to a web service and verify ownership and tr
 
 Verify that the application responds at its Deplexo URL before changing DNS. Custom domains route HTTP traffic to web services; a background worker does not need one.
 
-You need access to the authoritative DNS provider. Enter a hostname without a URL scheme, port, or path—for example, app.example.com.
+You need access to the DNS provider that manages your domain. Enter a hostname such as app.example.com, without a URL scheme, port, or path.
 
 <span id="add-and-verify"></span>
 
@@ -17,7 +17,7 @@ You need access to the authoritative DNS provider. Enter a hostname without a UR
 
 Open Domains, add the hostname, and choose the application. Deplexo shows a TXT verification record and the traffic routing record. Copy the exact host and value displayed for your domain.
 
-Publish the TXT record, wait for it to become visible, and select Verify. Some DNS providers append the zone name automatically; ensure the final record is at the intended hostname rather than duplicating the domain suffix.
+Publish the TXT record, wait for it to become visible, and select Verify. Some DNS providers append the zone name automatically. Check the full record name so you do not add the domain suffix twice.
 
 ```shell
 dig TXT _deplexo-challenge.app.example.com +short
@@ -31,7 +31,7 @@ dig TXT _deplexo-challenge.app.example.com +short
 
 Add the CNAME target shown in the dashboard. Ownership verification and traffic routing are separate records: a correct TXT record alone does not direct visitors to the app.
 
-For a root domain, your DNS provider must support appropriate apex behavior, such as CNAME flattening or an equivalent alias. Do not copy another application's target or assume a worker IP is a permanent routing address.
+For a root domain, your DNS provider must support CNAME flattening or an equivalent alias. Do not copy another application's target or assume a worker IP is a permanent routing address.
 
 <span id="verify-https"></span>
 

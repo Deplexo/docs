@@ -9,7 +9,7 @@ description: "Take ownership of a complete starter application, customize it, an
 
 Browse the gallery by purpose: portfolio, website, API, or bot. Read the template details before deploying, especially the required accounts, environment variables, workload type, and storage requirements.
 
-Each starter is independently usable. Its folder contains source, dependency lockfiles, a Dockerfile, deplexo.yaml, and a README. The README covers the application; these docs explain the shared Deplexo runtime.
+Each starter runs on its own. Its folder includes source code, dependency lockfiles, a Dockerfile, deplexo.yaml, and a README. Follow that README to set up the app, then use these docs for deploying it on Deplexo.
 
 - [Next.js portfolio](https://github.com/Deplexo/examples/tree/main/templates/nextjs-portfolio)
 - [Next.js website](https://github.com/Deplexo/examples/tree/main/templates/nextjs-website)
@@ -19,7 +19,7 @@ Each starter is independently usable. Its folder contains source, dependency loc
 
 ## Export a starter into your own directory
 
-Clone the public examples repository and run the export script with a template ID and a new destination directory. The exporter copies the selected starter with its license, so the result can become an independent repository.
+Clone the public examples repository and run the export script with a template ID and a new destination directory. The exporter copies the starter and its license into a directory you can turn into your own repository.
 
 Use a destination that does not already contain a project. The example below exports the Next.js portfolio. Other IDs include nextjs-website, go-telegram-bot, go-discord-bot, go-http-api, node-express, python-fastapi, and static-site.
 
@@ -36,9 +36,9 @@ cd ../my-portfolio
 
 ## Create your application repository
 
-Create a repository in your own git account and push the exported application there. Keep the license and required notices in your copy. Record the template revision you started from when tracking upstream changes.
+Create a repository in your own Git account and push the exported application there. Keep the license and required notices in your copy. Record the template revision you started from when tracking upstream changes.
 
-Your repository controls when code and dependencies change. Avoid pointing a production deployment at the shared examples collection: its maintenance updates should not become your releases automatically.
+Deploy from your own repository so you decide when code and dependencies change. Pointing a production app at the shared examples repository would let its maintenance updates trigger your releases.
 
 ```shell
 git init
@@ -65,7 +65,7 @@ For bots, create a separate development bot if possible. Stop any local polling 
 
 ## Deploy and maintain your copy
 
-Connect your repository in Deplexo and follow the quickstart. Preserve the starter's Dockerfile and service type unless you deliberately change the runtime. Enter required credentials before deployment, then verify the app with a real interaction.
+Connect your repository in Deplexo and follow the quickstart. Keep the starter's Dockerfile and runtime setup unless you intend to change how the app runs. Enter required credentials before deployment, then verify the app with a real interaction.
 
 Updates to the examples repository do not automatically modify your copy. Review upstream improvements, dependency updates, and security fixes, then commit the changes you want to ship. Run the starter's checks before redeploying.
 

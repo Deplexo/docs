@@ -5,9 +5,11 @@ const starters = [
   { icon: 'globe' as const, title: 'Next.js', description: 'Websites, portfolios, and server-rendered apps.', href: '/guides/nextjs/' },
   { icon: 'bot' as const, title: 'Telegram bots', description: 'Run a Go bot with long polling and gotgbot.', href: '/guides/telegram-bot/' },
   { icon: 'terminal' as const, title: 'Discord bots', description: 'Connect a Go bot to the Discord Gateway.', href: '/guides/discord-bot/' },
-  { icon: 'box' as const, title: 'Docker', description: 'Bring your own runtime, framework, or API.', href: '/guides/docker/' },
+  { icon: 'box' as const, title: 'Docker', description: 'Build an image for your runtime, framework, or API.', href: '/guides/docker/' },
 ];
 const guides = [
+  { icon: 'terminal' as const, title: 'CLI', description: 'Install deplexo and manage apps from your terminal.', href: '/guides/cli/' },
+  { icon: 'code' as const, title: 'User API', description: 'Manage apps and deployments from scripts or CI.', href: '/reference/user-api/' },
   { icon: 'settings' as const, title: 'Environment variables', description: 'Configure your app and keep credentials out of code.', href: '/guides/environment/' },
   { icon: 'globe' as const, title: 'Custom domains', description: 'Connect a domain and verify its DNS records.', href: '/guides/domains/' },
   { icon: 'git' as const, title: 'Deployments', description: 'Understand rebuilds, restarts, and rollbacks.', href: '/operations/deployments/' },
@@ -18,11 +20,11 @@ const guides = [
 ---
 <div class="docs-overview">
   <section class="quickstart-panel" aria-labelledby="quickstart-title" id="how-deplexo-works">
-    <div class="quickstart-copy"><span class="eyebrow">Getting started</span><h2 id="quickstart-title">Your first deployment.</h2><p>Connect your repository, configure your app, and follow the build through to a running service.</p><a class="primary-action" href="/getting-started/quickstart/">Follow the quickstart <DocsIcon size={16} /></a></div>
+    <div class="quickstart-copy"><span class="eyebrow">Getting started</span><h2 id="quickstart-title">Your first deployment</h2><p>Deploy from your repository, then check the build logs and test your running app.</p><a class="primary-action" href="/getting-started/quickstart/">Follow the quickstart <DocsIcon size={16} /></a></div>
     <div class="config-preview"><div class="config-filename"><DocsIcon name="code" size={16} /><span>deplexo.yaml</span><span class="file-label">Example config</span></div><Code code={'framework: dockerfile\ndockerfile: Dockerfile\nport: 3000'} lang="yaml" /><div class="deploy-flow"><span><DocsIcon name="git" size={13} />Repository</span><DocsIcon size={13} /><span>Build</span><DocsIcon size={13} /><span>Deploy</span></div></div>
   </section>
   <section class="overview-section" aria-labelledby="build-title" id="choose-a-starting-point">
-    <div class="section-heading"><h2 id="build-title">Build your app</h2><a href="/getting-started/templates/">Explore templates <DocsIcon size={14} /></a></div>
+    <div class="section-heading"><h2 id="build-title">Build your app</h2><a href="/getting-started/templates/">Browse templates <DocsIcon size={14} /></a></div>
     <div class="starter-links">{starters.map(item => <a href={item.href}><div class="starter-icon"><DocsIcon name={item.icon} size={23} /></div><h3>{item.title}</h3><p>{item.description}</p><span class="guide-link">View guide <DocsIcon size={15} /></span></a>)}</div>
   </section>
   <section class="overview-section" aria-labelledby="operate-title" id="find-an-answer">
@@ -30,5 +32,5 @@ const guides = [
     <div class="resource-links">{guides.map(item => <a href={item.href}><div class="resource-icon"><DocsIcon name={item.icon} size={19} /></div><div><h3>{item.title}</h3><p>{item.description}</p></div><DocsIcon size={15} /></a>)}</div>
   </section>
   <aside class="runtime-note" id="understand-the-runtime"><DocsIcon name="box" size={20} /><div><h2>Know your runtime</h2><p>Apps run in containers with a read-only filesystem. Use temporary storage for scratch files and a persistent volume for data that must survive redeployments. <a href="/operations/storage/">Read about storage <span aria-hidden="true">→</span></a></p></div></aside>
-  <div class="overview-help"><a href="/getting-started/faq/">Frequently asked questions <DocsIcon size={15} /></a><a href="/reference/acceptable-use/">Acceptable use and account rules <DocsIcon size={15} /></a></div>
+  <div class="overview-help"><a href="/getting-started/faq/">Frequently asked questions <DocsIcon size={15} /></a><a href="/reference/open-source/">Open-source projects <DocsIcon size={15} /></a><a href="/reference/acceptable-use/">Acceptable use and account rules <DocsIcon size={15} /></a></div>
 </div>
