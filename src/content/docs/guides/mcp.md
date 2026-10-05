@@ -25,44 +25,15 @@ Deplexo may ask you to confirm your credentials again if your last authenticatio
 
 ### Codex
 
-With the [Codex CLI](https://developers.openai.com/codex/cli/) installed, add Deplexo as a remote HTTP server:
+Add the server from your terminal:
 
 ```sh
 codex mcp add deplexo --url https://deplexo.com/mcp
 ```
 
-Complete browser approval if prompted. If the server still needs authentication, run:
+Complete browser approval. If sign-in does not start, run `codex mcp login deplexo`. Start Codex and use `/mcp` to check the connection. The CLI and IDE extension share the server configuration.
 
-```sh
-codex mcp login deplexo
-```
-
-Review the Deplexo account and requested permissions in your browser, then approve access. Check the saved server and start Codex:
-
-```sh
-codex mcp list
-codex mcp get deplexo
-codex
-```
-
-Inside Codex, use `/mcp` to inspect active servers. Ask it to show your account and list your apps using the [connection check below](#check-the-connection). A saved server entry alone does not confirm successful authentication or tool access.
-
-You can also configure the server directly in `~/.codex/config.toml`. Add this table alongside your existing settings; do not replace the whole file or duplicate an existing `deplexo` entry:
-
-```toml
-[mcp_servers.deplexo]
-url = "https://deplexo.com/mcp"
-```
-
-For one trusted project, the same table can live in `.codex/config.toml` in that project. The Codex CLI and IDE extension share this configuration. Run `codex mcp login deplexo` after adding it manually, then start a new Codex session or restart the extension.
-
-In the Codex IDE extension, you can instead open the gear menu, choose **MCP servers → Add server**, select **Streamable HTTP**, enter the URL above, save, and restart the extension. Choose **Authenticate** when the server needs sign-in.
-
-Deplexo uses OAuth for MCP. Leave bearer-token headers and client secrets out of this configuration; `DEPLEXO_TOKEN` and `deplexo auth login` belong to the separate Deplexo CLI connection.
-
-To clear Codex's stored OAuth credentials, use `codex mcp logout deplexo`. To remove its server entry, use `codex mcp remove deplexo`. Revoke the grant in Deplexo's **Connected clients** settings to end access on the server too.
-
-See OpenAI's [Codex MCP guide](https://developers.openai.com/codex/mcp/) and [MCP command reference](https://developers.openai.com/codex/cli/reference/#codex-mcp) for client settings and options.
+See [Codex's MCP documentation](https://developers.openai.com/codex/mcp/) for configuration files and IDE settings.
 
 ### Claude Code
 

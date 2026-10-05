@@ -21,7 +21,7 @@ These flags work before or after a command. Boolean flags default to false.
 
 ### Choose an account profile
 
-`--profile` names a separate saved sign-in; it does not change which Deplexo account you approve in the browser. Use the same profile on later commands:
+`--profile` names a saved sign-in. Choose the account in your browser, then use the same profile on later commands:
 
 ```sh
 deplexo --profile work auth login
@@ -29,7 +29,7 @@ deplexo --profile work whoami
 deplexo --profile work apps list
 ```
 
-Omitting the flag selects `DEPLEXO_PROFILE`, saved settings, or `default`. App links do not select a profile. `--origin` selects the Deplexo installation, not an app's public hostname; use an HTTPS origin without an API path:
+When you omit `--profile`, the CLI uses `DEPLEXO_PROFILE`, saved settings, or `default`, in that order. App links do not select a profile. Set `--origin` to the Deplexo installation's HTTPS origin, without an API path:
 
 ```sh
 deplexo --origin https://deplexo.com --profile work whoami
@@ -43,7 +43,7 @@ deplexo apps list --color never
 deplexo apps stop --app APP_UUID --yes --no-input --json
 ```
 
-Replace `APP_UUID` with an ID from `apps list`. `--json` is for scripts; it avoids parsing terminal tables. `--color always` forces terminal colors in human output, including redirected output; `never` disables them. `--no-input` prevents prompts but still requires valid credentials, permissions, and any command-specific `--yes`. It does not make browser authorization unattended. With macOS Keychain, use an injected API key or explicitly selected file storage for `--no-input` commands.
+Replace `APP_UUID` with an ID from `apps list`. Use `--json` in scripts. `--color always` forces terminal colors in human output, including redirected output; `never` disables them. `--no-input` prevents prompts but still requires valid credentials, permissions, and any command-specific `--yes`. Browser sign-in still needs your approval. For commands that need authentication on macOS, `--no-input` requires an API key or file storage.
 
 ## Authentication
 
@@ -76,7 +76,7 @@ For a remote terminal:
 deplexo auth login --device --no-browser
 ```
 
-The user must approve sign-in in their browser. Interactive success output includes the connected website, documentation, and next commands. JSON output remains the account object.
+Approve sign-in in your browser. After interactive login, the CLI prints the website, docs, and next commands. With `--json`, it returns the account object.
 
 Use `--read-only` for an inspection profile:
 
@@ -85,13 +85,13 @@ deplexo --profile inspect auth login --read-only
 deplexo --profile inspect apps list
 ```
 
-That profile cannot deploy, start, stop, cancel, or delete apps. To request selected permissions instead, use `--scopes`, for example `--scopes "profile:read app:read app:start app:stop"`. It replaces the whole requested permission set; it does not add permissions to an existing session. Sign in again when changing access.
+A read-only profile cannot deploy, start, stop, cancel, or delete apps. For selected permissions, use `--scopes`, for example `--scopes "profile:read app:read app:start app:stop"`. Sign in again to approve the new permission set.
 
-`--device` chooses pairing even on a local terminal. By itself it can offer to open the pairing page; add `--no-browser` to print the link and code only. SSH and redirected input already select pairing. Keep the CLI running while you approve the request on another device.
+Use `--device` to pair from a local terminal, too. It offers to open the pairing page; add `--no-browser` to print the link and code only. Keep the CLI running while you approve the request.
 
 ### When the keyring is unavailable
 
-The default is the operating system's credential store. `--insecure-storage` is an explicit choice to save credentials in a plaintext file with restricted permissions:
+The CLI uses your operating system's credential store by default. With `--insecure-storage`, it saves credentials in a plaintext file with restricted permissions:
 
 ```sh
 deplexo auth login --device --no-browser --insecure-storage
@@ -99,7 +99,7 @@ deplexo apps list --insecure-storage
 deplexo auth logout --insecure-storage
 ```
 
-Keep the flag on every command that uses those credentials. It is not saved as a preference, and omitting it switches back to the OS keyring. Changing storage modes does not migrate an existing sign-in; log in using the mode you intend to keep.
+Pass the flag whenever you use those credentials; omitting it selects the OS keyring. To change storage modes, sign in again with the mode you want.
 
 ### `whoami`, `auth status`, and `auth logout`
 
@@ -123,7 +123,7 @@ Use UUIDs, not app names. Commands with `--app` use `.deplexo.json` in the curre
 | `deploy` | `--app UUID` | `app:restart` | Rebuild the recorded source and queue a deployment. |
 | `link` | Required `--app UUID` | `app:read` | Check access and save the app UUID in `.deplexo.json`. |
 | `unlink` | None | None | Remove the current directory's app link; does not delete the app. |
-| `deployments list` | `--app UUID`, `--limit N`, `--offset N` | `app:read` | Read deployment history; limit defaults to 50, range 1–200; offset defaults to 0 and must be nonnegative. |
+| `deployments list` | `--app UUID`, `--limit N`, `--offset N` | `app:read` | Read deployment history; limit defaults to 50, range 1 to 200; offset defaults to 0 and must be nonnegative. |
 | `deployments logs DEPLOYMENT_UUID` | One required deployment UUID | `logs:read` | Read a build-log snapshot for that deployment. |
 
 `apps create` flags:
@@ -142,7 +142,7 @@ deplexo apps start --app APP_UUID
 deplexo deployments list --app APP_UUID --limit 20 --offset 20
 ```
 
-Replace placeholders before running commands. Start, stop, creation, and rebuild commands return when the server accepts the operation. Acceptance is not completion. Inspect the app state or the returned deployment UUID. After a lost response, inspect the app and deployment history before retrying.
+Replace placeholders before running commands. Start, stop, creation, and rebuild commands return when the server accepts the operation. Check the app state or returned deployment UUID to confirm completion. After a lost response, inspect the app and deployment history before retrying.
 
 `deploy` is a rebuild, not a process-only restart. It takes no local path argument. Local directory/ZIP uploads, environment-variable commands, build-log following, and a deployment wait command are not implemented. `--yes` confirms only commands that advertise it; it is not a global flag.
 
@@ -176,7 +176,7 @@ deplexo deployments logs DEPLOYMENT_UUID --json
 deplexo apps get --app APP_UUID --json
 ```
 
-Use the `deploymentId` returned by `deploy`. In the log response, inspect `status`, `buildLogs`, and `errorMessage`; without `--json`, this command prints only log text. Poll that exact deployment with backoff until `success` or `failed`, then verify the app. Set a time limit for your monitoring rather than polling forever.
+Use the `deploymentId` returned by `deploy`. In the log response, inspect `status`, `buildLogs`, and `errorMessage`; without `--json`, this command prints only log text. Poll that exact deployment with backoff until `success` or `failed`, then verify the app. Set a time limit for polling.
 
 `deployments list --limit 20 --offset 0` returns the first page; `--offset 20` skips the first 20 records. Add `--app APP_UUID` if the directory is not linked. Its `--limit` counts deployments, while `logs --limit` counts runtime log lines per request.
 
@@ -232,7 +232,7 @@ deplexo completion bash --no-descriptions
 deplexo help apps start
 ```
 
-`upgrade --check` does not install anything, even if `--yes` is also passed. Completion prints a script; use your shell's installation steps from `completion SHELL --help` to load it. `--no-descriptions` changes completion suggestions, not ordinary command help. `support --json` prints contact URLs and email without submitting a support request.
+`--check` takes precedence over `--yes`. The completion flag `--no-descriptions` leaves ordinary command help unchanged. `support --json` prints contact details; it does not submit a support request.
 
 For help, email [support@deplexo.com](mailto:support@deplexo.com) or join the [Discord community](https://dsc.gg/deplexo). Use email for account-specific questions. Never post credentials or environment secrets in support messages.
 
@@ -251,7 +251,7 @@ For origin and profile, precedence is command flag → environment variable → 
 | `TERM` | `dumb` disables color. |
 | `SSH_CONNECTION`, `SSH_TTY` | A nonempty value selects device authorization for login. |
 
-Profile names contain 1–64 letters, digits, underscores, or hyphens and start with a letter or digit. Save optional nonsecret settings as `deplexo/settings.json` under the OS user configuration directory:
+Profile names contain 1 to 64 letters, digits, underscores, or hyphens and start with a letter or digit. Save optional nonsecret settings as `deplexo/settings.json` under the OS user configuration directory:
 
 ```json
 { "version": 1, "origin": "https://deplexo.com", "profile": "default" }
