@@ -14,7 +14,7 @@
 
 ## Run locally
 
-Use Node.js 24 LTS.
+Use Node.js 26.
 
 ```sh
 npm ci
@@ -49,7 +49,7 @@ Check the page in the browser, then open a pull request. CI validates the build,
 
 ## Deploy
 
-The site runs at [docs.deplexo.com](https://docs.deplexo.com). See [deployment instructions](deploy/README.md) for the Docker and Cloudflare setup.
+The site runs at [docs.deplexo.com](https://docs.deplexo.com). GitHub Actions builds and deploys every push to `main` through GitHub Pages. See [deployment instructions](deploy/README.md) for custom-domain configuration and verification.
 
 ## License
 

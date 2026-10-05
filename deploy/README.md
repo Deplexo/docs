@@ -1,46 +1,46 @@
 # Hosting the docs
 
-Nginx serves the static documentation from an unprivileged container. Docker Compose binds it to `127.0.0.1:8094`; an existing Cloudflare Tunnel publishes `https://docs.deplexo.com`. Cloudflare handles public TLS. The site needs no database or writable application data.
+GitHub Pages serves the static Astro site at [docs.deplexo.com](https://docs.deplexo.com). Search is built with Pagefind and runs in the browser. The site needs no application server or database.
 
-## Deploy an update
+## Automatic deployment
 
-Install Docker Engine and Docker Compose, clone this repository on the host, and check out a reviewed commit. From the repository root, run:
+The [documentation workflow](../.github/workflows/ci.yml) runs source checks, builds the site, and validates generated links, metadata, sitemap, and search. It uploads `dist/` as a Pages artifact. Successful pushes to `main` deploy through the `github-pages` environment; pull requests only build and validate.
+
+To retry deployment, open the workflow in GitHub Actions and run it on `main`, or rerun a failed workflow after fixing its cause. Deployment permission is limited to the deployment job (`pages: write` and `id-token: write`). Repository tokens are provided by GitHub Actions; no Cloudflare credentials are needed in the workflow.
+
+## Custom domain and DNS
+
+In the repository's **Settings → Pages**:
+
+1. Set the build source to **GitHub Actions**.
+2. Set the custom domain to `docs.deplexo.com` before changing DNS.
+3. Once DNS validation and certificate provisioning complete, enable **Enforce HTTPS**.
+
+In Cloudflare, configure this record:
+
+| Type | Name | Target | Proxy status |
+| --- | --- | --- | --- |
+| CNAME | `docs` | `deplexo.github.io` | DNS only |
+
+Use automatic TTL. Replace a conflicting record for `docs.deplexo.com`; do not change the main site's records. The target has no repository path. Keep `site: 'https://docs.deplexo.com'` in `astro.config.mjs`; the custom domain serves this repository at its root, so no `/docs` base path is needed.
+
+A repository `CNAME` file is **not required** for an Actions deployment. GitHub Pages uses the custom-domain setting; Cloudflare supplies the DNS record. Both must be configured. See [GitHub's custom-domain instructions](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site).
+
+When migrating from another host, keep the previous host available until Pages serves the custom domain with a valid certificate and the checks below pass. DNS changes and certificate provisioning may take time. Retire the old host and its route only after verifying the switch.
+
+## Verify a deployment
+
+Confirm that the successful Pages deployment identifies the intended commit. Then check:
 
 ```sh
-bash scripts/deploy.sh
-```
-
-The script requires a clean checkout, builds an image tagged with the full Git commit, and waits for the container health check. Docker restarts the service after a host reboot. Replacing the single container may briefly interrupt requests. GitHub Actions validates changes; it does not automatically deploy them.
-
-## Connect Cloudflare
-
-Add an ingress rule to the existing locally managed tunnel, before its final catch-all rule:
-
-```yaml
-- hostname: docs.deplexo.com
-  service: http://127.0.0.1:8094
-```
-
-Validate the candidate configuration with `cloudflared --config /path/to/config.yml tunnel ingress validate`. Back up the current configuration before applying the change, then restart the tunnel connector using its service manager. On a tunnel shared with other sites, run a temporary connector during the restart to keep routes available.
-
-Using the existing authenticated Cloudflare installation, create the DNS record with `cloudflared tunnel route dns TUNNEL_NAME_OR_ID docs.deplexo.com`. Do not overwrite a conflicting record without investigating it. Keep tunnel credentials and account certificates outside this repository.
-
-## Verify and operate
-
-```sh
-docker compose --file deploy/compose.yaml ps
-docker compose --file deploy/compose.yaml logs --tail 100 docs
-curl --fail http://127.0.0.1:8094/healthz
 curl --fail https://docs.deplexo.com/
+curl --fail https://docs.deplexo.com/guides/mcp/
 curl --fail https://docs.deplexo.com/sitemap-index.xml
+curl --silent --output /dev/null --write-out '%{http_code}\n' https://docs.deplexo.com/this-page-does-not-exist/
 ```
 
-Check search in a browser and confirm that an unknown page returns HTTP 404. Register the sitemap in Search Console using an account with access to the domain.
+The unknown page should return HTTP 404. Check navigation, code blocks, mobile layout, and search in a browser. The deployment does not expose the old container's `/healthz` endpoint; use a public page for uptime monitoring.
 
-To roll back to a previously built image:
+## Roll back content
 
-```sh
-DEPLEXO_DOCS_IMAGE=deplexo-docs:PREVIOUS_FULL_COMMIT docker compose --file deploy/compose.yaml up --detach --wait --wait-timeout 60
-```
-
-Keep previous image tags until you have verified the current deployment. The Compose service uses a read-only filesystem, drops Linux capabilities, limits memory and process count, and rotates logs.
+Revert the offending commit on `main` and push the revert. The same checked workflow builds and deploys the previous content. Keep the custom-domain and DNS settings in place during a content rollback.
