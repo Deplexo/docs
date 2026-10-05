@@ -5,6 +5,8 @@ description: Use the Deplexo REST API to list apps, create deployments, read log
 
 Use the user API to manage Deplexo from scripts, CI jobs, or your own tools. The [Deplexo CLI](/guides/cli/) uses this API too.
 
+To connect an AI client, follow [Connect an AI agent with MCP](/guides/mcp/). MCP uses browser OAuth and its own endpoint; REST credentials cannot authenticate MCP.
+
 The base URL is `https://deplexo.com/user/api/v1`. Requests and responses use JSON, except for ZIP uploads and log streams. The [interactive API reference](https://deplexo.com/user/api/v1/docs) and [OpenAPI document](https://deplexo.com/user/api/v1/docs/openapi.yaml) provide endpoint schemas.
 
 ## Authentication
