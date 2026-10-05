@@ -3,24 +3,44 @@ title: Acceptable use
 description: Understand prohibited content, abusive workloads, and the account and data consequences of violating Deplexo platform rules.
 ---
 
-These rules apply to every Deplexo account, application, bot, and hosted file, on free and paid plans. They apply alongside the [Terms of Service](https://deplexo.com/terms). Only deploy code and content you have the right to run, host, and distribute.
+Last updated: October 5, 2026
+
+These rules apply to all Deplexo accounts, builds, applications, bots and stored files on free and paid plans. They cover private deployments, temporary files, caches and backups as well as public content. They apply alongside the [Terms of Service](https://deplexo.com/terms). Only use code and content you have the legal right to run, store and distribute.
 
 ## Prohibited content
 
-- Pirated movies, music, software, books, or other copyrighted material you do not have permission or a legal right to host or distribute. Linking a bot or service to unauthorized distribution does not make it acceptable.
-- NSFW content, including pornography, sexually explicit material, and applications or bots used to host or distribute that content.
-- Illegal content or activity, including unlawful exploitation and abuse.
+- Copyright infringement: storing, hosting, streaming or distributing material without permission or another legal right to do so, including pirated movies, music, software and books. This also covers bots, download services and collections of links that help people infringe copyright. You may store content you created, licensed or can otherwise lawfully use, provided it follows the other rules below.
+- NSFW content and sexual exploitation: pornography, sexually explicit material, child sexual abuse or exploitation material, and intimate images shared without consent. This includes synthetic or AI-generated versions and applications or bots used to produce, host or distribute them.
+- Fraud and unlawful activity: scams, payment fraud, deceptive impersonation, illegal sales or other activity prohibited by applicable law.
+- Abuse and privacy violations: threats, targeted harassment, encouraging violence or terrorism, doxxing, or collecting, publishing or selling personal information without a lawful basis, including stolen credentials and leaked private data.
 
-Owning an account or using a paid plan does not grant permission to host prohibited content. You are responsible for content uploaded or distributed through your application, including content submitted by its users.
+You are responsible for your applications and content submitted by their users. Secure your applications, address abuse and comply with applicable law and the terms of connected providers.
 
 ## Prohibited workloads
 
-- Malware, credential theft, phishing, botnets, and DDoS or attack tooling.
-- Cryptomining and workloads intended to misuse platform resources.
-- Attempts to escape a container, scan or compromise the host, access another tenant's data, or interfere with other applications.
-- Attempts to bypass CPU, memory, disk, process, network, or other platform limits.
+### Proxy, VPN and traffic relay services
 
-Repeated resource violations can result in an application being stopped or removed. Check your plan's limits and use the [troubleshooting guide](/operations/troubleshooting/) to diagnose legitimate resource issues.
+Do not run proxy or VPN servers on Deplexo. This includes HTTP/SOCKS proxies, anonymizers, Tor relays or exit nodes, and tunnels that relay general internet traffic. Private and password-protected services are also prohibited, even a VPN for your own use. You must not sell bandwidth or let others route their internet traffic through your application.
+
+Your app may route requests between its own components or to specific APIs it uses. You may also use a reverse proxy to serve your own web app, provided it does not forward arbitrary internet traffic. The proxy and VPN ban still applies if you offer the service through an application endpoint.
+
+### Security and network abuse
+
+- Malware, phishing, credential theft, botnets, DDoS attacks and attack tooling.
+- Accessing, scanning, testing or intercepting traffic on systems without the owner's permission, including third-party systems. Permission to run your own app does not include permission to test Deplexo's infrastructure or other customers' apps.
+- Attempts to escape a container, compromise the host, access another tenant's data or interfere with other applications.
+- Spam or unsolicited bulk messages, including email, SMS and bot messages. This includes messages your app sends through an external provider.
+- Open mail relays and open recursive DNS resolvers that accept requests from arbitrary internet users.
+- Bots or scrapers that bypass access controls, violate a connected provider's terms or disrupt other services.
+
+### Resource abuse and file sharing
+
+- Cryptocurrency mining.
+- Torrent clients, trackers and seedboxes, even when the files being shared are lawful.
+- Attempts to bypass CPU, memory, disk, process, network or other platform limits, billing requirements or security controls.
+- Workloads that disrupt shared resources or interfere with other applications.
+
+Repeated resource violations can result in an application being stopped or removed. Check your plan's limits and use the [troubleshooting guide](/operations/troubleshooting/) to investigate resource problems.
 
 ## Multiple-account and alternate-account abuse
 
@@ -38,6 +58,6 @@ Permanently deleted applications and data cannot be recovered. Keep independent 
 
 ## Report abuse or ask about a restriction
 
-Use [Deplexo support](https://deplexo.com/support) to report an abusive application or ask about an account restriction. Include the application URL or ID and a short description of the issue. Do not submit passwords, API keys, bot tokens, or copies of illegal material.
+Email [support@deplexo.com](mailto:support@deplexo.com), or use [Deplexo support](https://deplexo.com/support) if you can sign in, to report abuse or ask about a restriction. Include the application URL or ID and a short explanation. For a copyright complaint, identify the work, the specific URLs or file locations at issue, your relationship to the rights holder and a way to contact you. Do not submit passwords, API keys, bot tokens or copies of illegal material.
 
 If an account is restricted, contact support rather than creating an alternate account to bypass the restriction.
