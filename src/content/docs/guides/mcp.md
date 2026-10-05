@@ -76,7 +76,7 @@ The agent should call `get_account` and `list_apps`. Check that the returned acc
 
 Deployment tools use your account's ownership checks and plan limits. `deploy_app` accepts `name`, `repo_url`, and optional `root_dir`, `framework`, and `env`. Private repositories must be accessible through the Git provider connected to your Deplexo account.
 
-MCP deploys committed Git source; it does not upload uncommitted files from your computer. It currently has no tools for database provisioning, runtime log streaming, domain changes, or environment-variable editing after app creation. Use the dashboard or the [public API](/reference/user-api/) for supported operations outside this tool set.
+MCP deploys committed Git source; it does not upload uncommitted files from your computer. It currently has no tools for app start/stop/delete, database provisioning, runtime log streaming, domain changes, or environment-variable editing after app creation. Use the [CLI start/stop commands](/guides/cli/#start-stop-or-cancel), dashboard, or [public API](/reference/user-api/) for supported operations outside this tool set. CLI authentication is separate from your MCP connection; start and stop require `app:start` and `app:stop` on the CLI's credential.
 
 A queued deployment is not yet live. Keep its returned `deployment_id`, check it with `get_deployment`, and verify the application URL when it succeeds. Build logs include at most the last 32 KiB and report truncation. If creation times out, list your apps before retrying so you do not create a duplicate.
 

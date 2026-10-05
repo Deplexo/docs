@@ -31,9 +31,15 @@ deplexo whoami
 deplexo auth status
 ```
 
-Sign-in displays a verification URL and pairing code. Press Enter to open the browser and approve access, or use `deplexo auth login --no-browser` to open the URL yourself. Use `--read-only` when you only need to inspect apps and logs.
+On a local interactive terminal, sign-in opens your browser to approve access. SSH sessions and redirected input use a pairing link and code. Use `--device` to choose pairing explicitly, or `--no-browser` to print the instructions without opening a browser. Use `--read-only` when you only need to inspect apps and logs.
 
-The default permissions are `profile:read app:read app:deploy app:restart logs:read`. To change them, pass `--scopes` with a space-separated list; this replaces the defaults and must include `profile:read`. Starting, stopping, and deleting apps need `app:start`, `app:stop`, and `app:delete`, respectively.
+Normal login in the current source requests `profile:read app:read app:deploy app:restart app:start app:stop logs:read`. Existing sessions need another login to approve added permissions. For an older release that omits start/stop, request them explicitly:
+
+```sh
+deplexo auth login --scopes "profile:read app:read app:deploy app:restart app:start app:stop logs:read"
+```
+
+`--scopes` accepts spaces or commas, replaces the defaults, and must include `profile:read`. It cannot be combined with `--read-only`. Deletion requires explicitly requesting `app:delete`. See the [command and flag reference](/reference/cli/) for every option and release compatibility notes.
 
 Credentials are stored in Linux Secret Service, macOS Keychain, or Windows Credential Manager. On Linux, unlock the keyring before running commands. If a keyring is unavailable, `--insecure-storage` uses a plaintext credential file restricted to your account. Pass that flag on each command that needs the file. Run `deplexo auth logout` to sign out.
 
@@ -69,6 +75,18 @@ Replace the deployment UUID with one returned by `deploy` or `deployments list`.
 
 This command uses the API's `/apps/{id}/restart` endpoint and needs `app:restart`. The CLI does not offer a process-only restart or local directory and ZIP uploads. If an app creation request loses its response, check the dashboard before trying again to avoid creating another app.
 
+## Start, stop, or cancel
+
+For the linked app:
+
+```sh
+deplexo apps stop --yes
+deplexo apps start
+deplexo apps get
+```
+
+Use `--app APP_UUID` to select an app explicitly. Stop requires `app:stop`; start requires `app:start` and starts an existing stopped container without rebuilding. A queued response is not completion: inspect `apps get` for the resulting state. Stopping does not cancel an in-progress deployment; use `deplexo apps cancel --yes` for that. Deletion uses `deplexo apps delete --yes` and requires the separate `app:delete` permission.
+
 ## Read logs
 
 ```sh
@@ -103,4 +121,10 @@ deplexo apps --help
 
 `upgrade` asks before replacing the executable and verifies the archive checksum and the downloaded executable. Use `--yes` to skip the prompt. If you installed through a package manager, use that manager to update.
 
-The [CLI README](https://github.com/Deplexo/cli#readme) covers profiles, output formats, exit codes, and building from source.
+The [command reference](/reference/cli/) covers all commands, flags, defaults, permissions, profiles, environment variables, and exit codes. The [CLI README](https://github.com/Deplexo/cli#readme) also covers building from source.
+
+## Get support
+
+Email [support@deplexo.com](mailto:support@deplexo.com) for account-specific questions, or join the [Discord community](https://dsc.gg/deplexo) for community help. Include the app UUID, CLI version, and error message; leave out passwords, API keys, tokens, and environment secrets.
+
+The current source includes `deplexo support`, which prints these links without signing in or using the network. Use `deplexo support --json` for a machine-readable list. If your installed release does not have the command yet, use the links above.
