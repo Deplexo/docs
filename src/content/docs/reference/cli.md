@@ -19,6 +19,32 @@ These flags work before or after a command. Boolean flags default to false.
 | `--color MODE` | `auto` | `auto`, `always`, or `never`. Nonempty `NO_COLOR` or `TERM=dumb` disables colors in every mode. |
 | `-h`, `--help` | Off | Show help for the selected command without signing in. |
 
+### Choose an account profile
+
+`--profile` names a separate saved sign-in; it does not change which Deplexo account you approve in the browser. Use the same profile on later commands:
+
+```sh
+deplexo --profile work auth login
+deplexo --profile work whoami
+deplexo --profile work apps list
+```
+
+Omitting the flag selects `DEPLEXO_PROFILE`, saved settings, or `default`. App links do not select a profile. `--origin` selects the Deplexo installation, not an app's public hostname; use an HTTPS origin without an API path:
+
+```sh
+deplexo --origin https://deplexo.com --profile work whoami
+```
+
+### Choose output and prompting behavior
+
+```sh
+deplexo apps list --json
+deplexo apps list --color never
+deplexo apps stop --app APP_UUID --yes --no-input --json
+```
+
+Replace `APP_UUID` with an ID from `apps list`. `--json` is for scripts; it avoids parsing terminal tables. `--color always` forces terminal colors in human output, including redirected output; `never` disables them. `--no-input` prevents prompts but still requires valid credentials, permissions, and any command-specific `--yes`. It does not make browser authorization unattended. With macOS Keychain, use an injected API key or explicitly selected file storage for `--no-input` commands.
+
 ## Authentication
 
 ### `auth login`
@@ -52,11 +78,34 @@ deplexo auth login --device --no-browser
 
 The user must approve sign-in in their browser. Interactive success output includes the connected website, documentation, and next commands. JSON output remains the account object.
 
+Use `--read-only` for an inspection profile:
+
+```sh
+deplexo --profile inspect auth login --read-only
+deplexo --profile inspect apps list
+```
+
+That profile cannot deploy, start, stop, cancel, or delete apps. To request selected permissions instead, use `--scopes`, for example `--scopes "profile:read app:read app:start app:stop"`. It replaces the whole requested permission set; it does not add permissions to an existing session. Sign in again when changing access.
+
+`--device` chooses pairing even on a local terminal. By itself it can offer to open the pairing page; add `--no-browser` to print the link and code only. SSH and redirected input already select pairing. Keep the CLI running while you approve the request on another device.
+
+### When the keyring is unavailable
+
+The default is the operating system's credential store. `--insecure-storage` is an explicit choice to save credentials in a plaintext file with restricted permissions:
+
+```sh
+deplexo auth login --device --no-browser --insecure-storage
+deplexo apps list --insecure-storage
+deplexo auth logout --insecure-storage
+```
+
+Keep the flag on every command that uses those credentials. It is not saved as a preference, and omitting it switches back to the OS keyring. Changing storage modes does not migrate an existing sign-in; log in using the mode you intend to keep.
+
 ### `whoami`, `auth status`, and `auth logout`
 
 `whoami` and `auth status` check the current account through the API and require `profile:read`. `auth logout` revokes the saved session and removes local credentials. These commands have no local flags.
 
-`DEPLEXO_TOKEN` takes precedence over stored credentials. Unset it before browser login or logout; those commands do not replace or revoke an injected API key. On macOS, noninteractive keyring access may require an API key or explicit `--insecure-storage` because Keychain can open desktop prompts.
+`DEPLEXO_TOKEN` takes precedence over stored credentials. Unset it before browser login or logout if you intend to switch to stored credentials; those commands do not replace or revoke an injected API key. On macOS, `--no-input` cannot use Keychain; use an API key or explicitly choose `--insecure-storage`.
 
 ## Apps and deployments
 
@@ -97,6 +146,40 @@ Replace placeholders before running commands. Start, stop, creation, and rebuild
 
 `deploy` is a rebuild, not a process-only restart. It takes no local path argument. Local directory/ZIP uploads, environment-variable commands, build-log following, and a deployment wait command are not implemented. `--yes` confirms only commands that advertise it; it is not a global flag.
 
+### App selection and build settings
+
+Linking avoids repeating `--app` for each command in the current directory:
+
+```sh
+deplexo link --app APP_UUID
+deplexo apps get
+deplexo deploy
+```
+
+An explicit `--app` overrides the link for that command without changing `.deplexo.json`. To change the saved link, run `deplexo unlink` and then `link --app NEW_APP_UUID`. Unlinking only removes the local association.
+
+For creation, `--name` names the app and `--repo` supplies its Git source. `--root-dir` is relative to the repository root, useful for a monorepo. `--framework` chooses a supported build preset; omit it for detection. For example:
+
+```sh
+deplexo apps create --name api --repo https://github.com/example/project --root-dir services/api --framework dockerfile
+```
+
+This example expects a Dockerfile or Containerfile in `services/api`. These flags belong to `apps create`; `deploy` reuses the existing app's configuration. For custom install, build, or start commands and Dockerfile paths, use [repository configuration](/reference/configuration/).
+
+`apps create` immediately queues the first deployment and has no `--env` flag. If the app needs environment values on its first deployment, create it through [MCP](/guides/mcp/#available-tools), the dashboard, or the [public API](/reference/user-api/) with those values supplied.
+
+### Verify a deployment and page through history
+
+```sh
+deplexo deploy --app APP_UUID --json
+deplexo deployments logs DEPLOYMENT_UUID --json
+deplexo apps get --app APP_UUID --json
+```
+
+Use the `deploymentId` returned by `deploy`. In the log response, inspect `status`, `buildLogs`, and `errorMessage`; without `--json`, this command prints only log text. Poll that exact deployment with backoff until `success` or `failed`, then verify the app. Set a time limit for your monitoring rather than polling forever.
+
+`deployments list --limit 20 --offset 0` returns the first page; `--offset 20` skips the first 20 records. Add `--app APP_UUID` if the directory is not linked. Its `--limit` counts deployments, while `logs --limit` counts runtime log lines per request.
+
 ## Runtime logs
 
 `deplexo logs` requires `logs:read`.
@@ -116,6 +199,15 @@ deplexo logs --app APP_UUID --follow --timeout 10m --json --no-input
 
 Without `--follow`, the command returns one snapshot. `--timeout` bounds this log command, not deployment execution. Build logs use `deployments logs DEPLOYMENT_UUID`; that command has no `--follow`, `--limit`, or `--since` flags.
 
+To resume runtime logs, first request a JSON snapshot and copy its `nextSince` cursor:
+
+```sh
+deplexo logs --app APP_UUID --json
+deplexo logs --app APP_UUID --since 'CURSOR_FROM_nextSince' --follow --timeout 10m
+```
+
+Replace the quoted placeholder with that response's cursor. `--since` takes the opaque cursor, not a timestamp or a duration such as `10m`. `--limit` applies to each request, so a follow session can print more lines than the limit over time. Interrupting log following stops observation; it does not stop the app.
+
 ## Updates, support, and shell completion
 
 | Command | Local flags or arguments | Meaning |
@@ -132,6 +224,15 @@ Without `--follow`, the command returns one snapshot. `--timeout` bounds this lo
 `--no-descriptions` omits descriptions from generated completion suggestions and defaults to off. Completion commands print shell scripts even with `--json`. Run `deplexo completion SHELL --help` for installation instructions. Help, version, completion, and support work without network access.
 
 `upgrade` verifies downloads before replacement. In scripts, use `upgrade --yes` or `upgrade --check`; `--no-input` does not accept an update prompt. Development builds cannot upgrade themselves. Automatic checks run at most once per 24 hours after successful interactive commands; they do not install an update without consent. Set `DEPLEXO_NO_UPDATE_CHECK=1` to disable automatic checks.
+
+```sh
+deplexo upgrade --check
+deplexo upgrade --yes --no-input
+deplexo completion bash --no-descriptions
+deplexo help apps start
+```
+
+`upgrade --check` does not install anything, even if `--yes` is also passed. Completion prints a script; use your shell's installation steps from `completion SHELL --help` to load it. `--no-descriptions` changes completion suggestions, not ordinary command help. `support --json` prints contact URLs and email without submitting a support request.
 
 For help, email [support@deplexo.com](mailto:support@deplexo.com) or join the [Discord community](https://dsc.gg/deplexo). Use email for account-specific questions. Never post credentials or environment secrets in support messages.
 
@@ -171,6 +272,18 @@ These affect the installer, not ordinary CLI commands:
 | PowerShell `-InstallDir PATH` | Override `%LOCALAPPDATA%\Deplexo\bin`. |
 
 When piping the shell installer, apply environment variables to `sh`, which executes it. Inspect the [installer source](https://github.com/Deplexo/cli/tree/main/site) before using custom installation options.
+
+For example, pin a published version on Linux or macOS and prevent shell-configuration edits:
+
+```sh
+curl -fsSL https://cli.deplexo.com/install.sh | DEPLEXO_VERSION=v0.1.0 DEPLEXO_INSTALL_DIR="$HOME/.local/bin" DEPLEXO_NO_MODIFY_PATH=1 sh
+```
+
+The version above is an example of an existing release; choose the published tag you intend to install. `DEPLEXO_VERSION` controls the installer run, not future `deplexo upgrade` commands. In PowerShell, pass installer parameters after creating its script block:
+
+```powershell
+& ([scriptblock]::Create((Invoke-RestMethod -ErrorAction Stop 'https://cli.deplexo.com/install.ps1'))) -Version 'v0.1.0' -InstallDir (Join-Path $env:LOCALAPPDATA 'Deplexo\bin')
+```
 
 ## Output and exit codes
 

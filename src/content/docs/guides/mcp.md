@@ -1,6 +1,6 @@
 ---
 title: Connect an AI agent with MCP
-description: Connect Claude Code, Cursor, or another OAuth-capable MCP client to Deplexo.
+description: Configure Deplexo MCP in Codex, Claude Code, or Cursor, approve access, and verify your connection.
 ---
 
 Connect your AI client to Deplexo to inspect your apps and deploy Git repositories from a conversation.
@@ -22,6 +22,47 @@ Your client must support remote Streamable HTTP servers, OAuth authorization cod
 5. Return to your client and confirm that Deplexo's tools are available.
 
 Deplexo may ask you to confirm your credentials again if your last authentication is no longer recent. Only approve clients you intended to connect; a registered client's name does not verify its publisher.
+
+### Codex
+
+With the [Codex CLI](https://developers.openai.com/codex/cli/) installed, add Deplexo as a remote HTTP server:
+
+```sh
+codex mcp add deplexo --url https://deplexo.com/mcp
+```
+
+Complete browser approval if prompted. If the server still needs authentication, run:
+
+```sh
+codex mcp login deplexo
+```
+
+Review the Deplexo account and requested permissions in your browser, then approve access. Check the saved server and start Codex:
+
+```sh
+codex mcp list
+codex mcp get deplexo
+codex
+```
+
+Inside Codex, use `/mcp` to inspect active servers. Ask it to show your account and list your apps using the [connection check below](#check-the-connection). A saved server entry alone does not confirm successful authentication or tool access.
+
+You can also configure the server directly in `~/.codex/config.toml`. Add this table alongside your existing settings; do not replace the whole file or duplicate an existing `deplexo` entry:
+
+```toml
+[mcp_servers.deplexo]
+url = "https://deplexo.com/mcp"
+```
+
+For one trusted project, the same table can live in `.codex/config.toml` in that project. The Codex CLI and IDE extension share this configuration. Run `codex mcp login deplexo` after adding it manually, then start a new Codex session or restart the extension.
+
+In the Codex IDE extension, you can instead open the gear menu, choose **MCP servers → Add server**, select **Streamable HTTP**, enter the URL above, save, and restart the extension. Choose **Authenticate** when the server needs sign-in.
+
+Deplexo uses OAuth for MCP. Leave bearer-token headers and client secrets out of this configuration; `DEPLEXO_TOKEN` and `deplexo auth login` belong to the separate Deplexo CLI connection.
+
+To clear Codex's stored OAuth credentials, use `codex mcp logout deplexo`. To remove its server entry, use `codex mcp remove deplexo`. Revoke the grant in Deplexo's **Connected clients** settings to end access on the server too.
+
+See OpenAI's [Codex MCP guide](https://developers.openai.com/codex/mcp/) and [MCP command reference](https://developers.openai.com/codex/cli/reference/#codex-mcp) for client settings and options.
 
 ### Claude Code
 
@@ -74,7 +115,7 @@ The agent should call `get_account` and `list_apps`. Check that the returned acc
 | `redeploy_app` | Queue a redeployment of an existing app | `app:restart` |
 | `get_deployment` | Read deployment status and build logs | `logs:read` |
 
-Deployment tools use your account's ownership checks and plan limits. `deploy_app` accepts `name`, `repo_url`, and optional `root_dir`, `framework`, and `env`. Private repositories must be accessible through the Git provider connected to your Deplexo account.
+Deployment tools use your account's ownership checks and plan limits. `deploy_app` accepts `name`, `repo_url`, and optional `root_dir`, `framework`, and `env`. Private repositories must be accessible through the Git provider connected to your Deplexo account. For custom install, build, or start commands and Dockerfile paths, commit a [deplexo.yaml configuration](/reference/configuration/) with your source; these are not separate `deploy_app` arguments.
 
 MCP deploys committed Git source; it does not upload uncommitted files from your computer. It currently has no tools for app start/stop/delete, database provisioning, runtime log streaming, domain changes, or environment-variable editing after app creation. Use the [CLI start/stop commands](/guides/cli/#start-stop-or-cancel), dashboard, or [public API](/reference/user-api/) for supported operations outside this tool set. CLI authentication is separate from your MCP connection; start and stop require `app:start` and `app:stop` on the CLI's credential.
 
