@@ -24,8 +24,11 @@ A DiscordGo Gateway bot maintains an outgoing connection to Discord. Supply its 
 Use a single active instance for the starter. Before adding shards or multiple consumers, handle Discord's session limits and coordinate the shards. Stop the local bot when it shares production credentials.
 
 ```yaml
-framework: dockerfile
-dockerfile: Dockerfile
+version: 1
+type: worker
+build:
+  framework: dockerfile
+  dockerfile: Dockerfile
 ```
 
 - [DiscordGo source and examples](https://github.com/bwmarrin/discordgo)
@@ -56,4 +59,6 @@ When registering commands, update only the commands your app owns and leave unre
 
 ## Check the bot in Discord
 
-Deplexo currently performs a port check for all applications. A polling or Gateway bot has no HTTP listener, so startup may include a port warning before completing. Test a command in your Discord server and check the logs. Do not add a dummy HTTP server just to make the assigned URL load.
+With `type: worker`, Deplexo checks that the bot stays running and honors any image health check. It does not publish a port or assign an application URL. Omit `run.port` and verify a command in your Discord server, then check the runtime logs.
+
+Place this YAML at the source root before creating the app. Existing web apps cannot be converted by changing YAML; create a worker app and stop the old bot before starting the replacement. See the [configuration reference](/reference/configuration/).

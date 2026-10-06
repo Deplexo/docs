@@ -63,6 +63,8 @@ deplexo apps create --name my-app --repo https://github.com/example/my-app
 
 The command creates the app and its first deployment, then prints both UUIDs. For a private repository, first connect the Git provider and grant Deplexo access through the dashboard.
 
+Commit `deplexo.yaml` at the repository root to configure the app type, build, startup command, or web port. The server reads it during creation and redeployment; the CLI does not parse a local YAML file. Explicit YAML fields override matching command-line settings, while omitted fields use the supplied or saved defaults. See the [YAML reference](/reference/configuration/) for the version 1 format and supported Git providers.
+
 To rebuild an existing linked app:
 
 ```sh

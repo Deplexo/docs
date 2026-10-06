@@ -9,6 +9,8 @@ description: "Understand builds, automatic deployment, restarts, and the limits 
 
 Deplexo checks out the requested revision and builds its image before replacing the existing container. If the build fails, inspect that deployment's logs and correct the cause before trying again.
 
+For GitHub, GitLab, Bitbucket, and Codeberg, the configuration and build use the same resolved commit. ZIP deployments use the uploaded archive. Each redeployment validates `deplexo.yaml` again and applies its explicit fields over the saved dashboard defaults. Removing a YAML override restores the corresponding default. Starting an existing stopped container does not read changed source files.
+
 When the image is ready, Deplexo stops the previous container before starting its replacement. This can briefly interrupt service. Handle termination signals, finish in-flight work promptly, and make clients reconnect after a connection drops.
 
 <span id="automatic-deployments"></span>

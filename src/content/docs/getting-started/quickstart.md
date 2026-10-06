@@ -7,7 +7,7 @@ description: "Connect a repository, configure its runtime, and verify your first
 
 ## Before you start
 
-You need a Deplexo account and an app in a Git repository. For a private repository, connect your Git provider and grant Deplexo access. Add credentials in the deployment form so they stay out of your source code.
+You need a Deplexo account and application source in a Git repository or ZIP archive. For a private repository, connect your Git provider and grant Deplexo access. Add credentials in the deployment form so they stay out of your source code.
 
 Run the app locally first. Check how it starts, which port it listens on if it serves HTTP, and what storage or database it needs. Each official template lists these details in its README.
 
@@ -20,23 +20,28 @@ Run the app locally first. Check how it starts, which port it listens on if it s
 
 Commit a Dockerfile and your dependency lockfile. A Dockerfile gives you control over the build and startup process. For framework-generated builds, select the framework in the deployment form and use deplexo.yaml for repository settings.
 
-For monorepos, set the root directory to the folder containing your app. Docker build instructions and the Dockerfile path are resolved from that build context; keep the files needed by the build inside it.
+Place `deplexo.yaml` at the repository or ZIP source root. For monorepos, set `build.root_dir` to the folder containing your app. The Dockerfile path is relative to that build context; keep the files needed by the build inside it.
 
 ```yaml
-framework: dockerfile
-dockerfile: Dockerfile
-port: 3000
+version: 1
+type: web
+build:
+  framework: dockerfile
+  dockerfile: Dockerfile
+run:
+  port: 3000
 ```
 
 - [Docker and builds](/guides/docker/)
+- [YAML configuration reference](/reference/configuration/)
 
 <span id="configure-and-deploy"></span>
 
 ## Configure and deploy
 
-Open Deploy, choose your repository, and review the application name, region, and resources. Select the build method and root directory. Add the environment variables required by your application before submitting.
+Open Deploy, choose your repository or upload a ZIP, and review the application name, region, and resources. The form reads your YAML and marks the settings it controls. Explicit YAML values override dashboard defaults. Add the environment variables required by your application before submitting.
 
-For a web service, set PORT to the port your server listens on and bind the server to 0.0.0.0. For a polling bot or another background process, use its Dockerfile and required environment variables; no HTTP server is necessary. Review the resource information in the form, then deploy.
+For a web service, set `run.port` to the port your server listens on and bind the server to `0.0.0.0`. Deplexo supplies the matching `PORT` value. Without `run.port`, set `PORT` in the environment settings if your app uses a port other than 3000. For a polling bot or another background process, use `type: worker` and omit `run.port`; no HTTP server or public URL is required. Choose the correct app type before creation, because redeployment cannot change it.
 
 - [Deploy an application](https://deplexo.com/add)
 - [Environment variables](/guides/environment/)
