@@ -23,8 +23,11 @@ A polling bot connects outward to Telegram and waits for updates. It does not ne
 Keep one active polling consumer per token. Stop the local development process before deploying the same bot, and remove any existing Telegram webhook before switching that token to polling. A webhook and getUpdates polling cannot be used simultaneously.
 
 ```yaml
-framework: dockerfile
-dockerfile: Dockerfile
+version: 1
+type: worker
+build:
+  framework: dockerfile
+  dockerfile: Dockerfile
 ```
 
 - [gotgbot documentation and examples](https://github.com/PaulSonOfLars/gotgbot)
@@ -64,4 +67,6 @@ Changing only the service type does not turn a polling starter into a webhook bo
 
 ## Check the bot in Telegram
 
-Deplexo currently performs a port check for all applications. A polling or Gateway bot has no HTTP listener, so startup may include a port warning before completing. Send a command in your Telegram test chat and check the logs. Do not add a dummy HTTP server just to make the assigned URL load.
+With `type: worker`, Deplexo checks that the bot stays running and honors any image health check. It does not publish a port or assign an application URL. Omit `run.port` and verify a command in your Telegram test chat, then check the runtime logs.
+
+Place this YAML at the source root before creating the app. Existing web apps cannot be converted by changing YAML; create a worker app and stop the old bot before starting the replacement. See the [configuration reference](/reference/configuration/).

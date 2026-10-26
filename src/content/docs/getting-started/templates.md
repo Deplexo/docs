@@ -11,6 +11,8 @@ Browse the gallery by purpose: portfolio, website, API, or bot. Read the templat
 
 Each starter runs on its own. Its folder includes source code, dependency lockfiles, a Dockerfile, deplexo.yaml, and a README. Follow that README to set up the app, then use these docs for deploying it on Deplexo.
 
+Exporting places the version 1 YAML at the new source root. Web starters use `run.port: 3000`; polling and Gateway bots use `type: worker` and receive no public URL. For an older exported copy, follow the [YAML migration guide](/reference/configuration/#validation-and-migration).
+
 - [Next.js portfolio](https://github.com/Deplexo/examples/tree/main/templates/nextjs-portfolio)
 - [Next.js website](https://github.com/Deplexo/examples/tree/main/templates/nextjs-website)
 - [All templates](https://github.com/Deplexo/examples)

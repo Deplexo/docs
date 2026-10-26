@@ -17,6 +17,8 @@ NODE_ENV=production
 TELEGRAM_BOT_TOKEN=<set-in-deplexo>
 ```
 
+For web apps, `run.port` in `deplexo.yaml` overrides the runtime `PORT` value and makes it read-only in environment settings. Edit the YAML and redeploy to change it. Removing `run.port` restores the saved dashboard value on the next redeployment. See the [YAML port reference](/reference/configuration/#service-and-port).
+
 <span id="runtime-not-build"></span>
 
 ## Understand when variables are available

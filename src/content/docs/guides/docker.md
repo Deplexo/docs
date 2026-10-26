@@ -9,7 +9,7 @@ description: "Make your build reproducible and your container compatible with De
 
 Use a Dockerfile to control system packages, compilation, assets, and startup. Choose a framework-generated build if its install, build, and start steps fit your app.
 
-Select the intended method in the dashboard. When Dockerfile is selected, the repository must contain it at the configured path. Adding framework settings alone does not override an explicitly selected Dockerfile build.
+Select the intended method in the dashboard or set `build.framework` in YAML. An explicit YAML value overrides the dashboard selection. A nonempty Dockerfile path still selects a custom build, so clear any saved path when switching to `auto`. Dockerfile builds require the selected file inside the build context.
 
 - [Repository configuration](/reference/configuration/)
 
@@ -37,6 +37,8 @@ dist
 ## Start the correct process
 
 Use an exec-form CMD so the application process receives termination signals. Run a production server or compiled binary, not a development watcher. Web applications must listen on 0.0.0.0 and the configured PORT; exposing a Dockerfile port does not make a server listen on it.
+
+Set `build.framework: dockerfile` in a version 1 `deplexo.yaml` at the source root. Use `build.root_dir` for a subdirectory and `build.dockerfile` for a path relative to that build context. Dockerfile builds use the file's own build steps. A nonempty `run.command` overrides its `CMD` through `/bin/sh -c`; the image needs that shell, and any `ENTRYPOINT` remains in effect. For a web app, `run.port` sets routing and the runtime `PORT`; for a background worker, set `type: worker` and omit the port. See the [configuration reference](/reference/configuration/).
 
 Background processes should run in the foreground until stopped. Avoid scripts that launch the actual worker in the background and immediately exit.
 
