@@ -65,7 +65,7 @@ The command creates the app and its first deployment, then prints both UUIDs. Fo
 
 Commit `deplexo.yaml` at the repository root to configure the app type, build, startup command, or web port. The server reads it during creation and redeployment; the CLI does not parse a local YAML file. Explicit YAML fields override matching command-line settings, while omitted fields use the supplied or saved defaults. See the [YAML reference](/reference/configuration/) for the version 1 format and supported Git providers.
 
-To rebuild an existing linked app:
+To redeploy an existing linked app:
 
 ```sh
 deplexo deploy
@@ -73,7 +73,7 @@ deplexo deployments list
 deplexo deployments logs 22222222-2222-4222-8222-222222222222
 ```
 
-Replace the deployment UUID with one returned by `deploy` or `deployments list`. `deploy` rebuilds from the app's recorded source; Git apps use the latest source. It returns once the server accepts the request, so check the build logs to see whether deployment succeeds.
+Replace the deployment UUID with one returned by `deploy` or `deployments list`. `deploy` redeploys the app's recorded source; Git apps use the latest source. If nothing changed since an earlier build, it deploys that stored image without building; add `--rebuild` to build a fresh image. It returns once the server accepts the request, so check the deployment logs to see whether it succeeds.
 
 This command uses the API's `/apps/{id}/restart` endpoint and needs `app:restart`. The CLI does not offer a process-only restart or local directory and ZIP uploads. If an app creation request loses its response, check the dashboard before trying again to avoid creating another app.
 

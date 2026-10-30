@@ -84,13 +84,23 @@ The agent should call `get_account` and `list_apps`. Check that the returned acc
 | `get_app` | Read one app's state | `app:read` |
 | `deploy_app` | Create an app and queue a Git deployment | `app:deploy` |
 | `redeploy_app` | Queue a redeployment of an existing app | `app:restart` |
+| `start_app` | Start a stopped container without rebuilding | `app:start` |
+| `stop_app` | Stop an app’s container | `app:stop` |
 | `get_deployment` | Read deployment status and build logs | `logs:read` |
 
 Deployment tools use your account's ownership checks and plan limits. `deploy_app` accepts `name`, `repo_url`, and optional `root_dir`, `framework`, and `env`. Private repositories must be accessible through the Git provider connected to your Deplexo account. For custom install, build, or start commands and Dockerfile paths, commit a [deplexo.yaml configuration](/reference/configuration/) with your source; these are not separate `deploy_app` arguments.
 
-MCP deploys committed Git source; it does not upload uncommitted files from your computer. It currently has no tools for app start/stop/delete, database provisioning, runtime log streaming, domain changes, or environment-variable editing after app creation. Use the [CLI start/stop commands](/guides/cli/#start-stop-or-cancel), dashboard, or [public API](/reference/user-api/) for supported operations outside this tool set. CLI authentication is separate from your MCP connection; start and stop require `app:start` and `app:stop` on the CLI's credential.
+MCP deploys committed Git source; it does not upload uncommitted files from your computer. It currently has no tools for app deletion, database provisioning, runtime log streaming, domain changes, or environment-variable editing after app creation. Use the [CLI](/guides/cli/), dashboard, or [public API](/reference/user-api/) for supported operations outside this tool set. CLI authentication is separate from your MCP connection.
 
 A queued deployment is not yet live. Keep its returned `deployment_id`, check it with `get_deployment`, and verify the application URL when it succeeds. Build logs include at most the last 32 KiB and report truncation. If creation times out, list your apps before retrying so you do not create a duplicate.
+
+## Start or stop an app
+
+Use `get_account` and `get_app` to verify the account and app UUID, then call `start_app` or `stop_app` with `{"app_id":"APP_UUID"}`. Starting resumes an existing stopped container without rebuilding source. If the app has no container, it needs a redeployment. Stopping interrupts service and does not cancel an in-progress deployment.
+
+Both tools return `app_id`, `job_id` and a status of `starting` or `stopping`. Check `get_app` with bounded backoff until the app is `running` or `stopped`; accepting the job does not mean it has finished. After a timeout or lost response, check the current app state and report any uncertainty. Do not retry an ambiguous request automatically. Do not chain stop and start to simulate a process restart.
+
+Starting requires `app:start`, stopping requires `app:stop`, and checking the app requires `app:read`. If your MCP connection lacks a permission, reconnect and approve the required access.
 
 ## Give an agent the deployment guide
 

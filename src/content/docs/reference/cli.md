@@ -120,7 +120,7 @@ Use UUIDs, not app names. Commands with `--app` use `.deplexo.json` in the curre
 | `apps stop` | `--app UUID`, required `--yes` | `app:stop` | Queue a stop; does not cancel a deployment. |
 | `apps cancel` | `--app UUID`, required `--yes` | `app:deploy` | Cancel the app's in-progress deployment. |
 | `apps delete` | `--app UUID`, required `--yes` | `app:delete` | Delete the app and its resources. |
-| `deploy` | `--app UUID` | `app:restart` | Rebuild the recorded source and queue a deployment. |
+| `deploy` | `--app UUID`, `--rebuild` | `app:restart` | Queue a deployment of the recorded source. `--rebuild` builds a fresh image even if nothing changed. |
 | `link` | Required `--app UUID` | `app:read` | Check access and save the app UUID in `.deplexo.json`. |
 | `unlink` | None | None | Remove the current directory's app link; does not delete the app. |
 | `deployments list` | `--app UUID`, `--limit N`, `--offset N` | `app:read` | Read deployment history; limit defaults to 50, range 1 to 200; offset defaults to 0 and must be nonnegative. |
@@ -142,9 +142,9 @@ deplexo apps start --app APP_UUID
 deplexo deployments list --app APP_UUID --limit 20 --offset 20
 ```
 
-Replace placeholders before running commands. Start, stop, creation, and rebuild commands return when the server accepts the operation. Check the app state or returned deployment UUID to confirm completion. After a lost response, inspect the app and deployment history before retrying.
+Replace placeholders before running commands. Start, stop, creation, and deploy commands return when the server accepts the operation. Check the app state or returned deployment UUID to confirm completion. After a lost response, inspect the app and deployment history before retrying.
 
-`deploy` is a rebuild, not a process-only restart. It takes no local path argument. Local directory/ZIP uploads, environment-variable commands, build-log following, and a deployment wait command are not implemented. `--yes` confirms only commands that advertise it; it is not a global flag.
+`deploy` is not a process-only restart. When the source and build settings match an earlier build, it deploys that stored image without building; add `--rebuild` to build a fresh image. It takes no local path argument. Local directory/ZIP uploads, environment-variable commands, build-log following, and a deployment wait command are not implemented. `--yes` confirms only commands that advertise it; it is not a global flag.
 
 ### App selection and build settings
 

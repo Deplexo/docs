@@ -30,7 +30,7 @@ Scopes limit what a credential can do. They do not grant access to another accou
 | `profile:read` | Read your identity through `/profile`; include identity fields in `/me`. |
 | `app:read` | Read app inventory, app details, deployment history, usage, and alerts. |
 | `app:deploy` | Create apps, upload source ZIPs, cancel deployments, and change build or automatic deployment settings. |
-| `app:restart` | Rebuild and redeploy an existing app. |
+| `app:restart` | Redeploy an existing app. |
 | `app:start` | Start a stopped app. |
 | `app:stop` | Stop an app. |
 | `app:delete` | Delete an app. |
@@ -40,7 +40,7 @@ Scopes limit what a credential can do. They do not grant access to another accou
 | `domain:write` | Add, verify, or delete custom domains. |
 | `logs:read` | Read build and runtime logs. |
 
-A rebuild with `commitSha` or a replacement `sourceId` needs both `app:restart` and `app:deploy`. App details include build logs only when the credential also has `logs:read`.
+A redeployment with `commitSha` or a replacement `sourceId` needs both `app:restart` and `app:deploy`. App details include build logs only when the credential also has `logs:read`.
 
 ## List your apps
 
@@ -70,9 +70,9 @@ Optional fields include `framework`, `rootDir`, `dockerfilePath`, `installComman
 
 A `202 Accepted` response includes `appId`, `deploymentId`, and `status`. It means the deployment was accepted, not that the app is running. Use the returned deployment UUID to read its build logs. If a request times out after submission, check your app inventory before retrying creation.
 
-## Rebuild an existing app
+## Redeploy an existing app
 
-`POST /apps/{id}/restart` rebuilds and redeploys the app. For Git apps, an empty JSON body uses the latest source. This endpoint needs `app:restart`.
+`POST /apps/{id}/restart` redeploys the app with its current environment. For Git apps, an empty JSON body uses the latest source. If the source and build settings haven't changed since an earlier build, Deplexo deploys that stored image again without building. Send `{"rebuild":true}` to build a fresh image anyway, for example to pick up newer base images. This endpoint needs `app:restart`.
 
 ```sh
 APP_ID=11111111-1111-4111-8111-111111111111
@@ -83,7 +83,7 @@ curl --fail-with-body --silent --show-error \
   "https://deplexo.com/user/api/v1/apps/$APP_ID/restart"
 ```
 
-Replace the example UUID with your app's ID. To rebuild a particular Git revision, send `{"commitSha":"your-commit-sha"}` and include `app:deploy` in the credential's scopes. The API does not provide a process-only restart through this endpoint.
+Replace the example UUID with your app's ID. To redeploy a particular Git revision, send `{"commitSha":"your-commit-sha"}` and include `app:deploy` in the credential's scopes. The API does not provide a process-only restart through this endpoint.
 
 Use `POST /apps/{id}/stop` to stop an app, `POST /apps/{id}/start` to start a stopped app, and `POST /apps/{id}/cancel` to cancel its current deployment. Each requires the scope listed above. Stopping an app and cancelling a deployment are separate actions.
 

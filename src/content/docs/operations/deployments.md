@@ -25,7 +25,7 @@ If a push does not deploy, verify the branch, provider access, automatic deploym
 
 ## Choose a restart or redeployment
 
-A process-only restart replaces the container using its existing image and current runtime configuration. A redeployment builds the selected source revision first. In the CLI, `deplexo deploy` rebuilds the app; the user API calls this operation `POST /apps/{id}/restart`. See the [CLI guide](/guides/cli/#create-an-app-or-deploy-a-change) or [API guide](/reference/user-api/#rebuild-an-existing-app) before choosing an automation command.
+A process-only restart replaces the container using its existing image and current runtime configuration. A redeployment deploys the selected source revision with your current environment. If that source and its build settings haven't changed since an earlier build, Deplexo deploys the stored image again without building, so changing only environment variables doesn't trigger a build. Choose **Rebuild** in the dashboard, `deplexo deploy --rebuild`, or `{"rebuild":true}` in the API to build a fresh image, for example to pick up newer base images. The user API calls this operation `POST /apps/{id}/restart`. See the [CLI guide](/guides/cli/#create-an-app-or-deploy-a-change) or [API guide](/reference/user-api/#redeploy-an-existing-app) before choosing an automation command.
 
 Saving an environment value or mount setting does not alter an already-running process. Apply it with the relevant restart or redeployment action, then verify the new process and application behavior.
 
